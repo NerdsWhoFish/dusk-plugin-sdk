@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      # A skipped test reports success while testing nothing. This turns any
+      # "dependency missing, skipping" into a failure so CI cannot go green
+      # on a misconfigured runner.
+      DUSK_TEST_NO_SKIP: "1"
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+
+      - uses: bufbuild/buf-action@v1
+        with:
+          setup_only: true
+
+      - run: make lint
+      - run: make vet
+      - run: make test
+
+      # Generated code is committed so consumers can `go get` without buf.
+      # This fails if it drifts from the proto.
+      - name: generated code is current
+        run: |
+          make generate
+          git diff --exit-code -- gen/ || {
+            echo "::error::gen/ is stale; run 'make generate' and commit"
+            exit 1
+          }
+
+  breaking:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: bufbuild/buf-action@v1
+        with:
+          setup_only: true
+      - run: make breaking
