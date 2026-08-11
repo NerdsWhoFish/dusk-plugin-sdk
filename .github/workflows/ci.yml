@@ -26,8 +26,13 @@ jobs:
         with:
           setup_only: true
 
-      - run: make lint
-      - run: make vet
+      - uses: golangci/golangci-lint-action@v9
+        with:
+          version: latest
+          args: --timeout=5m
+
+      - run: buf lint
+      - run: make nocgo
       - run: make test
 
       # Generated code is committed so consumers can `go get` without buf.
