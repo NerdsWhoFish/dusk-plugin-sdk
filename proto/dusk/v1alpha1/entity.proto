@@ -1,0 +1,108 @@
+syntax = "proto3";
+
+package dusk.v1alpha1;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/FetchHQ/dusk-plugin-sdk/gen/dusk/v1alpha1;duskv1alpha1";
+
+// Provenance answers "where did this claim come from", on every message.
+// Dusk never infers it.
+message Provenance {
+  // Plugin id, or "dusk.md" for declared data.
+  string source = 1;
+
+  google.protobuf.Timestamp observed_at = 2;
+
+  // Git SHA for declared data, content hash for observed. Used by proof tokens.
+  string version = 3;
+}
+
+// Entity is a thing in the catalog.
+//
+// `ref` is the stable identity and the correlation key across sources. It is
+// the one field that is effectively permanent, so it is canonicalised as
+// "kind:namespace/name" (e.g. "service:home/scrypted").
+message Entity {
+  string ref = 1;
+
+  // Open vocabulary, not an enum: new kinds must be data, not a release.
+  // Extend via mintKind rather than by changing this file.
+  string kind = 2;
+
+  string namespace = 3;
+  string name = 4;
+  string title = 5;
+  string description = 6;
+
+  // Escape hatch for data this schema does not model yet. An attribute that
+  // recurs across three independent plugins should be promoted to a field.
+  google.protobuf.Struct attributes = 7;
+
+  Provenance provenance = 8;
+}
+
+// Relation is a typed edge. `type` is open vocabulary for the same reason
+// `Entity.kind` is: well-known values include runs_on, depends_on, owns,
+// documents, deploys_from.
+message Relation {
+  string from = 1;
+  string to = 2;
+  string type = 3;
+  google.protobuf.Struct attributes = 4;
+  Provenance provenance = 5;
+}
+
+// Note is curated knowledge: the "how do I do this again" unit.
+//
+// Distinct from Event, which is a firehose. Notes are few, durable, and
+// human-meaningful; mixing the two buries the notes that matter.
+message Note {
+  string id = 1;
+
+  // A note may attach to more than one entity.
+  repeated string refs = 2;
+
+  // Open vocabulary. Well-known: gotcha, runbook, howto, decision, incident,
+  // todo. Kind drives ranking and rendering, not just labelling.
+  string kind = 3;
+
+  // Markdown.
+  string body = 4;
+
+  // Pinned notes are candidates for injection into agent context at boot.
+  bool pinned = 5;
+
+  // Set by Dusk. Identical content on the same entity returns the existing
+  // note rather than creating a duplicate.
+  string content_hash = 6;
+
+  Provenance provenance = 7;
+}
+
+// Observation is the status facet: what a plugin actually saw.
+//
+// Observations never overwrite declared data. Divergence between the two is
+// surfaced as drift, which is a feature rather than a conflict to resolve.
+message Observation {
+  string ref = 1;
+  google.protobuf.Struct payload = 2;
+  Provenance provenance = 3;
+}
+
+// IngestBatch is what a Tier 1 ingester writes to stdout as protojson, and
+// what a Tier 2 plugin streams over gRPC.
+message IngestBatch {
+  string schema_version = 1;
+
+  repeated Entity entities = 2;
+  repeated Relation relations = 3;
+  repeated Note notes = 4;
+  repeated Observation observations = 5;
+
+  // True when the plugin could not fully enumerate its source. Dusk must not
+  // treat absence as deletion: "I could not look" and "it is not there" are
+  // never the same thing.
+  bool partial = 6;
+}

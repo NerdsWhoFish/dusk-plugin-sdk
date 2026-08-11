@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package dusk.v1alpha1;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/FetchHQ/dusk-plugin-sdk/gen/dusk/v1alpha1;duskv1alpha1";
+
+enum EventStatus {
+  EVENT_STATUS_UNSPECIFIED = 0;
+  EVENT_STATUS_STARTED = 1;
+  EVENT_STATUS_SUCCEEDED = 2;
+  EVENT_STATUS_FAILED = 3;
+  EVENT_STATUS_DENIED = 4;
+}
+
+// Event records an action invocation.
+//
+// Events are a firehose and Notes are curated knowledge; they are deliberately
+// separate types so invocation records cannot bury the notes that matter.
+// Dusk always emits events. Persistence is an optional time-series exporter:
+// events are never written to the SQLite index, because that index is
+// disposable by contract and events cannot be rebuilt from git.
+//
+// An event may be promoted to a Note by deliberate act, when an invocation
+// turns out to be knowledge worth keeping.
+message Event {
+  string id = 1;
+  string ref = 2;
+  string action = 3;
+
+  // Agent session id, or a user identity.
+  string actor = 4;
+
+  EventStatus status = 5;
+  google.protobuf.Timestamp started_at = 6;
+  google.protobuf.Timestamp finished_at = 7;
+  string message = 8;
+  google.protobuf.Struct detail = 9;
+}
