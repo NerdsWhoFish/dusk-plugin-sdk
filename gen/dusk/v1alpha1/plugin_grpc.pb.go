@@ -19,11 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	PluginService_Describe_FullMethodName = "/dusk.v1alpha1.PluginService/Describe"
-	PluginService_Ingest_FullMethodName   = "/dusk.v1alpha1.PluginService/Ingest"
-	PluginService_DryRun_FullMethodName   = "/dusk.v1alpha1.PluginService/DryRun"
-	PluginService_Invoke_FullMethodName   = "/dusk.v1alpha1.PluginService/Invoke"
-	PluginService_Status_FullMethodName   = "/dusk.v1alpha1.PluginService/Status"
+	PluginService_Describe_FullMethodName       = "/dusk.v1alpha1.PluginService/Describe"
+	PluginService_ValidateConfig_FullMethodName = "/dusk.v1alpha1.PluginService/ValidateConfig"
+	PluginService_Ingest_FullMethodName         = "/dusk.v1alpha1.PluginService/Ingest"
+	PluginService_DryRun_FullMethodName         = "/dusk.v1alpha1.PluginService/DryRun"
+	PluginService_Invoke_FullMethodName         = "/dusk.v1alpha1.PluginService/Invoke"
+	PluginService_Status_FullMethodName         = "/dusk.v1alpha1.PluginService/Status"
 )
 
 // PluginServiceClient is the client API for PluginService service.
@@ -35,6 +36,7 @@ const (
 // IngestBatch as protojson to stdout, and exit.
 type PluginServiceClient interface {
 	Describe(ctx context.Context, in *DescribeRequest, opts ...grpc.CallOption) (*DescribeResponse, error)
+	ValidateConfig(ctx context.Context, in *ValidateConfigRequest, opts ...grpc.CallOption) (*ValidateConfigResponse, error)
 	Ingest(ctx context.Context, in *IngestRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[IngestResponse], error)
 	DryRun(ctx context.Context, in *DryRunRequest, opts ...grpc.CallOption) (*DryRunResponse, error)
 	Invoke(ctx context.Context, in *InvokeRequest, opts ...grpc.CallOption) (*InvokeResponse, error)
@@ -53,6 +55,16 @@ func (c *pluginServiceClient) Describe(ctx context.Context, in *DescribeRequest,
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(DescribeResponse)
 	err := c.cc.Invoke(ctx, PluginService_Describe_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *pluginServiceClient) ValidateConfig(ctx context.Context, in *ValidateConfigRequest, opts ...grpc.CallOption) (*ValidateConfigResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ValidateConfigResponse)
+	err := c.cc.Invoke(ctx, PluginService_ValidateConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -117,6 +129,7 @@ func (c *pluginServiceClient) Status(ctx context.Context, in *StatusRequest, opt
 // IngestBatch as protojson to stdout, and exit.
 type PluginServiceServer interface {
 	Describe(context.Context, *DescribeRequest) (*DescribeResponse, error)
+	ValidateConfig(context.Context, *ValidateConfigRequest) (*ValidateConfigResponse, error)
 	Ingest(*IngestRequest, grpc.ServerStreamingServer[IngestResponse]) error
 	DryRun(context.Context, *DryRunRequest) (*DryRunResponse, error)
 	Invoke(context.Context, *InvokeRequest) (*InvokeResponse, error)
@@ -133,6 +146,9 @@ type UnimplementedPluginServiceServer struct{}
 
 func (UnimplementedPluginServiceServer) Describe(context.Context, *DescribeRequest) (*DescribeResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Describe not implemented")
+}
+func (UnimplementedPluginServiceServer) ValidateConfig(context.Context, *ValidateConfigRequest) (*ValidateConfigResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ValidateConfig not implemented")
 }
 func (UnimplementedPluginServiceServer) Ingest(*IngestRequest, grpc.ServerStreamingServer[IngestResponse]) error {
 	return status.Error(codes.Unimplemented, "method Ingest not implemented")
@@ -181,6 +197,24 @@ func _PluginService_Describe_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PluginServiceServer).Describe(ctx, req.(*DescribeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PluginService_ValidateConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ValidateConfigRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PluginServiceServer).ValidateConfig(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PluginService_ValidateConfig_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PluginServiceServer).ValidateConfig(ctx, req.(*ValidateConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -260,6 +294,10 @@ var PluginService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Describe",
 			Handler:    _PluginService_Describe_Handler,
+		},
+		{
+			MethodName: "ValidateConfig",
+			Handler:    _PluginService_ValidateConfig_Handler,
 		},
 		{
 			MethodName: "DryRun",

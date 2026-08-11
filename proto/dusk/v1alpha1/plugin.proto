@@ -40,6 +40,38 @@ message ActionDescriptor {
   repeated string applies_to_kinds = 7;
 }
 
+// ConfigFieldType is closed: Dusk renders a form from it, so an unknown type
+// has no rendering.
+enum ConfigFieldType {
+  CONFIG_FIELD_TYPE_UNSPECIFIED = 0;
+  CONFIG_FIELD_TYPE_STRING = 1;
+  CONFIG_FIELD_TYPE_INT = 2;
+  CONFIG_FIELD_TYPE_BOOL = 3;
+  CONFIG_FIELD_TYPE_ENUM = 4;
+  CONFIG_FIELD_TYPE_DURATION = 5;
+}
+
+// ConfigField is one setting in the plugin's admin form.
+message ConfigField {
+  string name = 1;
+  string label = 2;
+  string help = 3;
+  ConfigFieldType type = 4;
+  bool required = 5;
+  string default_value = 6;
+
+  // Allowed values when type is ENUM.
+  repeated string enum_values = 7;
+
+  // RE2 pattern validated by Dusk before the value is stored.
+  string pattern = 8;
+
+  // Sensitive values are stored encrypted, never returned by any read, and
+  // never written to the config repo. A first-class field rather than a schema
+  // annotation, because an author who forgets this leaks a credential.
+  bool sensitive = 9;
+}
+
 message DescribeRequest {}
 
 message DescribeResponse {
@@ -51,6 +83,22 @@ message DescribeResponse {
   repeated string emits_kinds = 4;
 
   repeated ActionDescriptor actions = 5;
+  repeated ConfigField config_fields = 6;
+}
+
+message ValidateConfigRequest {
+  google.protobuf.Struct config = 1;
+}
+
+// ValidateConfigResponse reports whether the configuration actually works, so
+// a bad credential fails where it was entered rather than as a mysterious
+// ingest failure later.
+message ValidateConfigResponse {
+  bool ok = 1;
+  string message = 2;
+
+  // Field name to error, for anything attributable to one field.
+  map<string, string> field_errors = 3;
 }
 
 message IngestRequest {
@@ -119,6 +167,7 @@ message StatusResponse {
 // IngestBatch as protojson to stdout, and exit.
 service PluginService {
   rpc Describe(DescribeRequest) returns (DescribeResponse);
+  rpc ValidateConfig(ValidateConfigRequest) returns (ValidateConfigResponse);
   rpc Ingest(IngestRequest) returns (stream IngestResponse);
   rpc DryRun(DryRunRequest) returns (DryRunResponse);
   rpc Invoke(InvokeRequest) returns (InvokeResponse);

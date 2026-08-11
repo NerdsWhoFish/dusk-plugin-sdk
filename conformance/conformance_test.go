@@ -98,20 +98,7 @@ func TestValidateBatch(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := conformance.ValidateBatch([]byte(tt.in))
-
-			if len(tt.want) == 0 {
-				if !got.OK() {
-					t.Fatalf("want clean, got violations:\n%s", got.Error())
-				}
-				return
-			}
-
-			for _, path := range tt.want {
-				if !hasViolation(t, got, path) {
-					t.Errorf("want violation at %q, got:\n%s", path, got.Error())
-				}
-			}
+			assertViolations(t, conformance.ValidateBatch([]byte(tt.in)), tt.want)
 		})
 	}
 }
