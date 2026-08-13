@@ -301,6 +301,41 @@ message InvokeRequest {
   // the plugin's first one. A plugin watching two clusters must act on the one
   // the target actually lives in.
   google.protobuf.Struct config = 5;
+
+  // Elicited carries the answers to a previous Elicit, and is set only when
+  // resuming one. A plugin that asked and was answered is invoked again with
+  // the same params plus this.
+  Elicited elicited = 6;
+}
+
+// Elicit is a plugin asking the human a structured question mid-action. It is
+// returned rather than called, so a surface with nobody attached refuses it
+// instead of hanging (ADR-0046).
+message Elicit {
+  // Prompt is what the person is asked, in their language rather than the
+  // plugin's. It is shown above the fields.
+  string prompt = 1;
+
+  // Schema is a JSON Schema object describing the fields wanted. Flat objects
+  // of primitives only, which is all the MCP elicitation contract carries.
+  google.protobuf.Struct schema = 2;
+
+  // Token is opaque to Dusk and returned verbatim, so a plugin can resume
+  // without keeping the half-finished call in memory.
+  string token = 3;
+}
+
+// Elicited is the answer to an Elicit, including the ways it can be refused.
+message Elicited {
+  // Token is whatever the Elicit carried.
+  string token = 1;
+
+  // Values are the fields the person supplied, empty unless accepted.
+  google.protobuf.Struct values = 2;
+
+  // Outcome is accept, decline or cancel. Declining is a considered no and
+  // cancelling is walking away, and a plugin may care which.
+  string outcome = 3;
 }
 
 message InvokeResponse {
@@ -320,6 +355,11 @@ message InvokeResponse {
   // Observed names entity refs this invocation changed, so the catalog can
   // refresh them rather than serving what it saw before the action ran.
   repeated string changed = 7;
+
+  // Elicit asks for input and ends this turn. Nothing else in the response is
+  // acted on: no chain runs and no refresh happens, because the action has not
+  // finished. Dusk asks, then invokes again with the answer (ADR-0046).
+  Elicit elicit = 8;
 }
 
 message StatusRequest {

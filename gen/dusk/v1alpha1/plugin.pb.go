@@ -1399,7 +1399,11 @@ type InvokeRequest struct {
 	// Config is the configuration of the instance that observed this entity, not
 	// the plugin's first one. A plugin watching two clusters must act on the one
 	// the target actually lives in.
-	Config        *structpb.Struct `protobuf:"bytes,5,opt,name=config,proto3" json:"config,omitempty"`
+	Config *structpb.Struct `protobuf:"bytes,5,opt,name=config,proto3" json:"config,omitempty"`
+	// Elicited carries the answers to a previous Elicit, and is set only when
+	// resuming one. A plugin that asked and was answered is invoked again with
+	// the same params plus this.
+	Elicited      *Elicited `protobuf:"bytes,6,opt,name=elicited,proto3" json:"elicited,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1469,6 +1473,147 @@ func (x *InvokeRequest) GetConfig() *structpb.Struct {
 	return nil
 }
 
+func (x *InvokeRequest) GetElicited() *Elicited {
+	if x != nil {
+		return x.Elicited
+	}
+	return nil
+}
+
+// Elicit is a plugin asking the human a structured question mid-action. It is
+// returned rather than called, so a surface with nobody attached refuses it
+// instead of hanging (ADR-0046).
+type Elicit struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Prompt is what the person is asked, in their language rather than the
+	// plugin's. It is shown above the fields.
+	Prompt string `protobuf:"bytes,1,opt,name=prompt,proto3" json:"prompt,omitempty"`
+	// Schema is a JSON Schema object describing the fields wanted. Flat objects
+	// of primitives only, which is all the MCP elicitation contract carries.
+	Schema *structpb.Struct `protobuf:"bytes,2,opt,name=schema,proto3" json:"schema,omitempty"`
+	// Token is opaque to Dusk and returned verbatim, so a plugin can resume
+	// without keeping the half-finished call in memory.
+	Token         string `protobuf:"bytes,3,opt,name=token,proto3" json:"token,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Elicit) Reset() {
+	*x = Elicit{}
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Elicit) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Elicit) ProtoMessage() {}
+
+func (x *Elicit) ProtoReflect() protoreflect.Message {
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Elicit.ProtoReflect.Descriptor instead.
+func (*Elicit) Descriptor() ([]byte, []int) {
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *Elicit) GetPrompt() string {
+	if x != nil {
+		return x.Prompt
+	}
+	return ""
+}
+
+func (x *Elicit) GetSchema() *structpb.Struct {
+	if x != nil {
+		return x.Schema
+	}
+	return nil
+}
+
+func (x *Elicit) GetToken() string {
+	if x != nil {
+		return x.Token
+	}
+	return ""
+}
+
+// Elicited is the answer to an Elicit, including the ways it can be refused.
+type Elicited struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Token is whatever the Elicit carried.
+	Token string `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	// Values are the fields the person supplied, empty unless accepted.
+	Values *structpb.Struct `protobuf:"bytes,2,opt,name=values,proto3" json:"values,omitempty"`
+	// Outcome is accept, decline or cancel. Declining is a considered no and
+	// cancelling is walking away, and a plugin may care which.
+	Outcome       string `protobuf:"bytes,3,opt,name=outcome,proto3" json:"outcome,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Elicited) Reset() {
+	*x = Elicited{}
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Elicited) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Elicited) ProtoMessage() {}
+
+func (x *Elicited) ProtoReflect() protoreflect.Message {
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Elicited.ProtoReflect.Descriptor instead.
+func (*Elicited) Descriptor() ([]byte, []int) {
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *Elicited) GetToken() string {
+	if x != nil {
+		return x.Token
+	}
+	return ""
+}
+
+func (x *Elicited) GetValues() *structpb.Struct {
+	if x != nil {
+		return x.Values
+	}
+	return nil
+}
+
+func (x *Elicited) GetOutcome() string {
+	if x != nil {
+		return x.Outcome
+	}
+	return ""
+}
+
 type InvokeResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Set when the action is async; poll Status with it.
@@ -1483,14 +1628,18 @@ type InvokeResponse struct {
 	Then []*Next `protobuf:"bytes,6,rep,name=then,proto3" json:"then,omitempty"`
 	// Observed names entity refs this invocation changed, so the catalog can
 	// refresh them rather than serving what it saw before the action ran.
-	Changed       []string `protobuf:"bytes,7,rep,name=changed,proto3" json:"changed,omitempty"`
+	Changed []string `protobuf:"bytes,7,rep,name=changed,proto3" json:"changed,omitempty"`
+	// Elicit asks for input and ends this turn. Nothing else in the response is
+	// acted on: no chain runs and no refresh happens, because the action has not
+	// finished. Dusk asks, then invokes again with the answer (ADR-0046).
+	Elicit        *Elicit `protobuf:"bytes,8,opt,name=elicit,proto3" json:"elicit,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *InvokeResponse) Reset() {
 	*x = InvokeResponse{}
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[16]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1502,7 +1651,7 @@ func (x *InvokeResponse) String() string {
 func (*InvokeResponse) ProtoMessage() {}
 
 func (x *InvokeResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[16]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1515,7 +1664,7 @@ func (x *InvokeResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InvokeResponse.ProtoReflect.Descriptor instead.
 func (*InvokeResponse) Descriptor() ([]byte, []int) {
-	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{16}
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *InvokeResponse) GetHandle() string {
@@ -1567,6 +1716,13 @@ func (x *InvokeResponse) GetChanged() []string {
 	return nil
 }
 
+func (x *InvokeResponse) GetElicit() *Elicit {
+	if x != nil {
+		return x.Elicit
+	}
+	return nil
+}
+
 type StatusRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Handle        string                 `protobuf:"bytes,1,opt,name=handle,proto3" json:"handle,omitempty"`
@@ -1576,7 +1732,7 @@ type StatusRequest struct {
 
 func (x *StatusRequest) Reset() {
 	*x = StatusRequest{}
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[17]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1588,7 +1744,7 @@ func (x *StatusRequest) String() string {
 func (*StatusRequest) ProtoMessage() {}
 
 func (x *StatusRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[17]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1601,7 +1757,7 @@ func (x *StatusRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StatusRequest.ProtoReflect.Descriptor instead.
 func (*StatusRequest) Descriptor() ([]byte, []int) {
-	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{17}
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *StatusRequest) GetHandle() string {
@@ -1623,7 +1779,7 @@ type StatusResponse struct {
 
 func (x *StatusResponse) Reset() {
 	*x = StatusResponse{}
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[18]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1635,7 +1791,7 @@ func (x *StatusResponse) String() string {
 func (*StatusResponse) ProtoMessage() {}
 
 func (x *StatusResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[18]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1648,7 +1804,7 @@ func (x *StatusResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StatusResponse.ProtoReflect.Descriptor instead.
 func (*StatusResponse) Descriptor() ([]byte, []int) {
-	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{18}
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *StatusResponse) GetDone() bool {
@@ -1688,7 +1844,7 @@ type GetAssetRequest struct {
 
 func (x *GetAssetRequest) Reset() {
 	*x = GetAssetRequest{}
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[19]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1700,7 +1856,7 @@ func (x *GetAssetRequest) String() string {
 func (*GetAssetRequest) ProtoMessage() {}
 
 func (x *GetAssetRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[19]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1713,7 +1869,7 @@ func (x *GetAssetRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAssetRequest.ProtoReflect.Descriptor instead.
 func (*GetAssetRequest) Descriptor() ([]byte, []int) {
-	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{19}
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *GetAssetRequest) GetName() string {
@@ -1736,7 +1892,7 @@ type GetAssetResponse struct {
 
 func (x *GetAssetResponse) Reset() {
 	*x = GetAssetResponse{}
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[20]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1748,7 +1904,7 @@ func (x *GetAssetResponse) String() string {
 func (*GetAssetResponse) ProtoMessage() {}
 
 func (x *GetAssetResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[20]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1761,7 +1917,7 @@ func (x *GetAssetResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAssetResponse.ProtoReflect.Descriptor instead.
 func (*GetAssetResponse) Descriptor() ([]byte, []int) {
-	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{20}
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *GetAssetResponse) GetChunk() []byte {
@@ -1853,14 +2009,23 @@ const file_dusk_v1alpha1_plugin_proto_rawDesc = "" +
 	"\x0eDryRunResponse\x12\x1c\n" +
 	"\tsupported\x18\x01 \x01(\bR\tsupported\x12\x18\n" +
 	"\asummary\x18\x02 \x01(\tR\asummary\x12/\n" +
-	"\x06detail\x18\x03 \x01(\v2\x17.google.protobuf.StructR\x06detail\"\xbc\x01\n" +
+	"\x06detail\x18\x03 \x01(\v2\x17.google.protobuf.StructR\x06detail\"\xf1\x01\n" +
 	"\rInvokeRequest\x12\x10\n" +
 	"\x03ref\x18\x01 \x01(\tR\x03ref\x12\x16\n" +
 	"\x06action\x18\x02 \x01(\tR\x06action\x12/\n" +
 	"\x06params\x18\x03 \x01(\v2\x17.google.protobuf.StructR\x06params\x12\x1f\n" +
 	"\vproof_token\x18\x04 \x01(\tR\n" +
 	"proofToken\x12/\n" +
-	"\x06config\x18\x05 \x01(\v2\x17.google.protobuf.StructR\x06config\"\xda\x01\n" +
+	"\x06config\x18\x05 \x01(\v2\x17.google.protobuf.StructR\x06config\x123\n" +
+	"\belicited\x18\x06 \x01(\v2\x17.dusk.v1alpha1.ElicitedR\belicited\"g\n" +
+	"\x06Elicit\x12\x16\n" +
+	"\x06prompt\x18\x01 \x01(\tR\x06prompt\x12/\n" +
+	"\x06schema\x18\x02 \x01(\v2\x17.google.protobuf.StructR\x06schema\x12\x14\n" +
+	"\x05token\x18\x03 \x01(\tR\x05token\"k\n" +
+	"\bElicited\x12\x14\n" +
+	"\x05token\x18\x01 \x01(\tR\x05token\x12/\n" +
+	"\x06values\x18\x02 \x01(\v2\x17.google.protobuf.StructR\x06values\x12\x18\n" +
+	"\aoutcome\x18\x03 \x01(\tR\aoutcome\"\x89\x02\n" +
 	"\x0eInvokeResponse\x12\x16\n" +
 	"\x06handle\x18\x01 \x01(\tR\x06handle\x12\x12\n" +
 	"\x04done\x18\x02 \x01(\bR\x04done\x12\x0e\n" +
@@ -1868,7 +2033,8 @@ const file_dusk_v1alpha1_plugin_proto_rawDesc = "" +
 	"\amessage\x18\x04 \x01(\tR\amessage\x12/\n" +
 	"\x06detail\x18\x05 \x01(\v2\x17.google.protobuf.StructR\x06detail\x12'\n" +
 	"\x04then\x18\x06 \x03(\v2\x13.dusk.v1alpha1.NextR\x04then\x12\x18\n" +
-	"\achanged\x18\a \x03(\tR\achanged\"'\n" +
+	"\achanged\x18\a \x03(\tR\achanged\x12-\n" +
+	"\x06elicit\x18\b \x01(\v2\x15.dusk.v1alpha1.ElicitR\x06elicit\"'\n" +
 	"\rStatusRequest\x12\x16\n" +
 	"\x06handle\x18\x01 \x01(\tR\x06handle\"\x7f\n" +
 	"\x0eStatusResponse\x12\x12\n" +
@@ -1933,7 +2099,7 @@ func file_dusk_v1alpha1_plugin_proto_rawDescGZIP() []byte {
 }
 
 var file_dusk_v1alpha1_plugin_proto_enumTypes = make([]protoimpl.EnumInfo, 5)
-var file_dusk_v1alpha1_plugin_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
+var file_dusk_v1alpha1_plugin_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
 var file_dusk_v1alpha1_plugin_proto_goTypes = []any{
 	(ActionClass)(0),               // 0: dusk.v1alpha1.ActionClass
 	(ConfigFieldType)(0),           // 1: dusk.v1alpha1.ConfigFieldType
@@ -1956,20 +2122,22 @@ var file_dusk_v1alpha1_plugin_proto_goTypes = []any{
 	(*DryRunRequest)(nil),          // 18: dusk.v1alpha1.DryRunRequest
 	(*DryRunResponse)(nil),         // 19: dusk.v1alpha1.DryRunResponse
 	(*InvokeRequest)(nil),          // 20: dusk.v1alpha1.InvokeRequest
-	(*InvokeResponse)(nil),         // 21: dusk.v1alpha1.InvokeResponse
-	(*StatusRequest)(nil),          // 22: dusk.v1alpha1.StatusRequest
-	(*StatusResponse)(nil),         // 23: dusk.v1alpha1.StatusResponse
-	(*GetAssetRequest)(nil),        // 24: dusk.v1alpha1.GetAssetRequest
-	(*GetAssetResponse)(nil),       // 25: dusk.v1alpha1.GetAssetResponse
-	nil,                            // 26: dusk.v1alpha1.ValidateConfigResponse.FieldErrorsEntry
-	(*structpb.Struct)(nil),        // 27: google.protobuf.Struct
-	(*IngestBatch)(nil),            // 28: dusk.v1alpha1.IngestBatch
+	(*Elicit)(nil),                 // 21: dusk.v1alpha1.Elicit
+	(*Elicited)(nil),               // 22: dusk.v1alpha1.Elicited
+	(*InvokeResponse)(nil),         // 23: dusk.v1alpha1.InvokeResponse
+	(*StatusRequest)(nil),          // 24: dusk.v1alpha1.StatusRequest
+	(*StatusResponse)(nil),         // 25: dusk.v1alpha1.StatusResponse
+	(*GetAssetRequest)(nil),        // 26: dusk.v1alpha1.GetAssetRequest
+	(*GetAssetResponse)(nil),       // 27: dusk.v1alpha1.GetAssetResponse
+	nil,                            // 28: dusk.v1alpha1.ValidateConfigResponse.FieldErrorsEntry
+	(*structpb.Struct)(nil),        // 29: google.protobuf.Struct
+	(*IngestBatch)(nil),            // 30: dusk.v1alpha1.IngestBatch
 }
 var file_dusk_v1alpha1_plugin_proto_depIdxs = []int32{
 	0,  // 0: dusk.v1alpha1.ActionDescriptor.class:type_name -> dusk.v1alpha1.ActionClass
-	27, // 1: dusk.v1alpha1.ActionDescriptor.params_schema:type_name -> google.protobuf.Struct
+	29, // 1: dusk.v1alpha1.ActionDescriptor.params_schema:type_name -> google.protobuf.Struct
 	6,  // 2: dusk.v1alpha1.ActionDescriptor.then:type_name -> dusk.v1alpha1.Next
-	27, // 3: dusk.v1alpha1.Next.params:type_name -> google.protobuf.Struct
+	29, // 3: dusk.v1alpha1.Next.params:type_name -> google.protobuf.Struct
 	1,  // 4: dusk.v1alpha1.ConfigField.type:type_name -> dusk.v1alpha1.ConfigFieldType
 	5,  // 5: dusk.v1alpha1.DescribeResponse.actions:type_name -> dusk.v1alpha1.ActionDescriptor
 	7,  // 6: dusk.v1alpha1.DescribeResponse.config_fields:type_name -> dusk.v1alpha1.ConfigField
@@ -1980,37 +2148,41 @@ var file_dusk_v1alpha1_plugin_proto_depIdxs = []int32{
 	11, // 11: dusk.v1alpha1.ViewSpec.fields:type_name -> dusk.v1alpha1.ViewField
 	2,  // 12: dusk.v1alpha1.UIContribution.slot:type_name -> dusk.v1alpha1.UISlot
 	12, // 13: dusk.v1alpha1.UIContribution.spec:type_name -> dusk.v1alpha1.ViewSpec
-	27, // 14: dusk.v1alpha1.ValidateConfigRequest.config:type_name -> google.protobuf.Struct
-	26, // 15: dusk.v1alpha1.ValidateConfigResponse.field_errors:type_name -> dusk.v1alpha1.ValidateConfigResponse.FieldErrorsEntry
-	27, // 16: dusk.v1alpha1.IngestRequest.config:type_name -> google.protobuf.Struct
-	28, // 17: dusk.v1alpha1.IngestResponse.batch:type_name -> dusk.v1alpha1.IngestBatch
-	27, // 18: dusk.v1alpha1.DryRunRequest.params:type_name -> google.protobuf.Struct
-	27, // 19: dusk.v1alpha1.DryRunRequest.config:type_name -> google.protobuf.Struct
-	27, // 20: dusk.v1alpha1.DryRunResponse.detail:type_name -> google.protobuf.Struct
-	27, // 21: dusk.v1alpha1.InvokeRequest.params:type_name -> google.protobuf.Struct
-	27, // 22: dusk.v1alpha1.InvokeRequest.config:type_name -> google.protobuf.Struct
-	27, // 23: dusk.v1alpha1.InvokeResponse.detail:type_name -> google.protobuf.Struct
-	6,  // 24: dusk.v1alpha1.InvokeResponse.then:type_name -> dusk.v1alpha1.Next
-	27, // 25: dusk.v1alpha1.StatusResponse.detail:type_name -> google.protobuf.Struct
-	8,  // 26: dusk.v1alpha1.PluginService.Describe:input_type -> dusk.v1alpha1.DescribeRequest
-	14, // 27: dusk.v1alpha1.PluginService.ValidateConfig:input_type -> dusk.v1alpha1.ValidateConfigRequest
-	16, // 28: dusk.v1alpha1.PluginService.Ingest:input_type -> dusk.v1alpha1.IngestRequest
-	18, // 29: dusk.v1alpha1.PluginService.DryRun:input_type -> dusk.v1alpha1.DryRunRequest
-	20, // 30: dusk.v1alpha1.PluginService.Invoke:input_type -> dusk.v1alpha1.InvokeRequest
-	22, // 31: dusk.v1alpha1.PluginService.Status:input_type -> dusk.v1alpha1.StatusRequest
-	24, // 32: dusk.v1alpha1.PluginService.GetAsset:input_type -> dusk.v1alpha1.GetAssetRequest
-	10, // 33: dusk.v1alpha1.PluginService.Describe:output_type -> dusk.v1alpha1.DescribeResponse
-	15, // 34: dusk.v1alpha1.PluginService.ValidateConfig:output_type -> dusk.v1alpha1.ValidateConfigResponse
-	17, // 35: dusk.v1alpha1.PluginService.Ingest:output_type -> dusk.v1alpha1.IngestResponse
-	19, // 36: dusk.v1alpha1.PluginService.DryRun:output_type -> dusk.v1alpha1.DryRunResponse
-	21, // 37: dusk.v1alpha1.PluginService.Invoke:output_type -> dusk.v1alpha1.InvokeResponse
-	23, // 38: dusk.v1alpha1.PluginService.Status:output_type -> dusk.v1alpha1.StatusResponse
-	25, // 39: dusk.v1alpha1.PluginService.GetAsset:output_type -> dusk.v1alpha1.GetAssetResponse
-	33, // [33:40] is the sub-list for method output_type
-	26, // [26:33] is the sub-list for method input_type
-	26, // [26:26] is the sub-list for extension type_name
-	26, // [26:26] is the sub-list for extension extendee
-	0,  // [0:26] is the sub-list for field type_name
+	29, // 14: dusk.v1alpha1.ValidateConfigRequest.config:type_name -> google.protobuf.Struct
+	28, // 15: dusk.v1alpha1.ValidateConfigResponse.field_errors:type_name -> dusk.v1alpha1.ValidateConfigResponse.FieldErrorsEntry
+	29, // 16: dusk.v1alpha1.IngestRequest.config:type_name -> google.protobuf.Struct
+	30, // 17: dusk.v1alpha1.IngestResponse.batch:type_name -> dusk.v1alpha1.IngestBatch
+	29, // 18: dusk.v1alpha1.DryRunRequest.params:type_name -> google.protobuf.Struct
+	29, // 19: dusk.v1alpha1.DryRunRequest.config:type_name -> google.protobuf.Struct
+	29, // 20: dusk.v1alpha1.DryRunResponse.detail:type_name -> google.protobuf.Struct
+	29, // 21: dusk.v1alpha1.InvokeRequest.params:type_name -> google.protobuf.Struct
+	29, // 22: dusk.v1alpha1.InvokeRequest.config:type_name -> google.protobuf.Struct
+	22, // 23: dusk.v1alpha1.InvokeRequest.elicited:type_name -> dusk.v1alpha1.Elicited
+	29, // 24: dusk.v1alpha1.Elicit.schema:type_name -> google.protobuf.Struct
+	29, // 25: dusk.v1alpha1.Elicited.values:type_name -> google.protobuf.Struct
+	29, // 26: dusk.v1alpha1.InvokeResponse.detail:type_name -> google.protobuf.Struct
+	6,  // 27: dusk.v1alpha1.InvokeResponse.then:type_name -> dusk.v1alpha1.Next
+	21, // 28: dusk.v1alpha1.InvokeResponse.elicit:type_name -> dusk.v1alpha1.Elicit
+	29, // 29: dusk.v1alpha1.StatusResponse.detail:type_name -> google.protobuf.Struct
+	8,  // 30: dusk.v1alpha1.PluginService.Describe:input_type -> dusk.v1alpha1.DescribeRequest
+	14, // 31: dusk.v1alpha1.PluginService.ValidateConfig:input_type -> dusk.v1alpha1.ValidateConfigRequest
+	16, // 32: dusk.v1alpha1.PluginService.Ingest:input_type -> dusk.v1alpha1.IngestRequest
+	18, // 33: dusk.v1alpha1.PluginService.DryRun:input_type -> dusk.v1alpha1.DryRunRequest
+	20, // 34: dusk.v1alpha1.PluginService.Invoke:input_type -> dusk.v1alpha1.InvokeRequest
+	24, // 35: dusk.v1alpha1.PluginService.Status:input_type -> dusk.v1alpha1.StatusRequest
+	26, // 36: dusk.v1alpha1.PluginService.GetAsset:input_type -> dusk.v1alpha1.GetAssetRequest
+	10, // 37: dusk.v1alpha1.PluginService.Describe:output_type -> dusk.v1alpha1.DescribeResponse
+	15, // 38: dusk.v1alpha1.PluginService.ValidateConfig:output_type -> dusk.v1alpha1.ValidateConfigResponse
+	17, // 39: dusk.v1alpha1.PluginService.Ingest:output_type -> dusk.v1alpha1.IngestResponse
+	19, // 40: dusk.v1alpha1.PluginService.DryRun:output_type -> dusk.v1alpha1.DryRunResponse
+	23, // 41: dusk.v1alpha1.PluginService.Invoke:output_type -> dusk.v1alpha1.InvokeResponse
+	25, // 42: dusk.v1alpha1.PluginService.Status:output_type -> dusk.v1alpha1.StatusResponse
+	27, // 43: dusk.v1alpha1.PluginService.GetAsset:output_type -> dusk.v1alpha1.GetAssetResponse
+	37, // [37:44] is the sub-list for method output_type
+	30, // [30:37] is the sub-list for method input_type
+	30, // [30:30] is the sub-list for extension type_name
+	30, // [30:30] is the sub-list for extension extendee
+	0,  // [0:30] is the sub-list for field type_name
 }
 
 func init() { file_dusk_v1alpha1_plugin_proto_init() }
@@ -2025,7 +2197,7 @@ func file_dusk_v1alpha1_plugin_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_dusk_v1alpha1_plugin_proto_rawDesc), len(file_dusk_v1alpha1_plugin_proto_rawDesc)),
 			NumEnums:      5,
-			NumMessages:   22,
+			NumMessages:   24,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
