@@ -84,6 +84,25 @@ message DescribeResponse {
 
   repeated ActionDescriptor actions = 5;
   repeated ConfigField config_fields = 6;
+  repeated UIContribution ui = 7;
+}
+
+// UIContribution is a view a plugin renders itself, as a custom element rather
+// than a React component, so the plugin's own tooling stays its own business
+// and Dusk's React can be upgraded without breaking it.
+message UIContribution {
+  // Element is the custom element tag, which must contain a hyphen.
+  string element = 1;
+
+  // Asset names the JavaScript to fetch with GetAsset. It defines the element.
+  string asset = 2;
+
+  // AppliesToKinds limits where it mounts. Empty means every entity this
+  // plugin emits, which is the common case.
+  repeated string applies_to_kinds = 3;
+
+  // Title labels the block the element is rendered in.
+  string title = 4;
 }
 
 message ValidateConfigRequest {
@@ -162,9 +181,20 @@ message StatusResponse {
   google.protobuf.Struct detail = 4;
 }
 
-// PluginService is the Tier 2 contract, served over gRPC on a unix socket the
-// host provides. Tier 1 ingesters implement none of this: they exec, write an
-// IngestBatch as protojson to stdout, and exit.
+message GetAssetRequest {
+  string name = 1;
+}
+
+// GetAssetResponse streams the asset in chunks rather than returning one bytes
+// field. gRPC's send limit is unbounded and its receive limit defaults to 4MB,
+// so a plugin embedding a large bundle would send it happily and have the host
+// reject it. Chunking has no size to guess at.
+message GetAssetResponse {
+  bytes chunk = 1;
+}
+
+// PluginService is the contract, served over gRPC on a unix socket the host
+// provides. There is no second transport (ADR-0039).
 service PluginService {
   rpc Describe(DescribeRequest) returns (DescribeResponse);
   rpc ValidateConfig(ValidateConfigRequest) returns (ValidateConfigResponse);
@@ -172,4 +202,8 @@ service PluginService {
   rpc DryRun(DryRunRequest) returns (DryRunResponse);
   rpc Invoke(InvokeRequest) returns (InvokeResponse);
   rpc Status(StatusRequest) returns (StatusResponse);
+
+  // GetAsset serves the JavaScript a UI contribution names. Dusk serves it
+  // from its own origin, so a plugin's view never reaches the network.
+  rpc GetAsset(GetAssetRequest) returns (stream GetAssetResponse);
 }

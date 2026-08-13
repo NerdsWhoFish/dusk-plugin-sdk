@@ -25,15 +25,15 @@ const (
 	PluginService_DryRun_FullMethodName         = "/dusk.v1alpha1.PluginService/DryRun"
 	PluginService_Invoke_FullMethodName         = "/dusk.v1alpha1.PluginService/Invoke"
 	PluginService_Status_FullMethodName         = "/dusk.v1alpha1.PluginService/Status"
+	PluginService_GetAsset_FullMethodName       = "/dusk.v1alpha1.PluginService/GetAsset"
 )
 
 // PluginServiceClient is the client API for PluginService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// PluginService is the Tier 2 contract, served over gRPC on a unix socket the
-// host provides. Tier 1 ingesters implement none of this: they exec, write an
-// IngestBatch as protojson to stdout, and exit.
+// PluginService is the contract, served over gRPC on a unix socket the host
+// provides. There is no second transport (ADR-0039).
 type PluginServiceClient interface {
 	Describe(ctx context.Context, in *DescribeRequest, opts ...grpc.CallOption) (*DescribeResponse, error)
 	ValidateConfig(ctx context.Context, in *ValidateConfigRequest, opts ...grpc.CallOption) (*ValidateConfigResponse, error)
@@ -41,6 +41,9 @@ type PluginServiceClient interface {
 	DryRun(ctx context.Context, in *DryRunRequest, opts ...grpc.CallOption) (*DryRunResponse, error)
 	Invoke(ctx context.Context, in *InvokeRequest, opts ...grpc.CallOption) (*InvokeResponse, error)
 	Status(ctx context.Context, in *StatusRequest, opts ...grpc.CallOption) (*StatusResponse, error)
+	// GetAsset serves the JavaScript a UI contribution names. Dusk serves it
+	// from its own origin, so a plugin's view never reaches the network.
+	GetAsset(ctx context.Context, in *GetAssetRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetAssetResponse], error)
 }
 
 type pluginServiceClient struct {
@@ -120,13 +123,31 @@ func (c *pluginServiceClient) Status(ctx context.Context, in *StatusRequest, opt
 	return out, nil
 }
 
+func (c *pluginServiceClient) GetAsset(ctx context.Context, in *GetAssetRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetAssetResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &PluginService_ServiceDesc.Streams[1], PluginService_GetAsset_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[GetAssetRequest, GetAssetResponse]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type PluginService_GetAssetClient = grpc.ServerStreamingClient[GetAssetResponse]
+
 // PluginServiceServer is the server API for PluginService service.
 // All implementations must embed UnimplementedPluginServiceServer
 // for forward compatibility.
 //
-// PluginService is the Tier 2 contract, served over gRPC on a unix socket the
-// host provides. Tier 1 ingesters implement none of this: they exec, write an
-// IngestBatch as protojson to stdout, and exit.
+// PluginService is the contract, served over gRPC on a unix socket the host
+// provides. There is no second transport (ADR-0039).
 type PluginServiceServer interface {
 	Describe(context.Context, *DescribeRequest) (*DescribeResponse, error)
 	ValidateConfig(context.Context, *ValidateConfigRequest) (*ValidateConfigResponse, error)
@@ -134,6 +155,9 @@ type PluginServiceServer interface {
 	DryRun(context.Context, *DryRunRequest) (*DryRunResponse, error)
 	Invoke(context.Context, *InvokeRequest) (*InvokeResponse, error)
 	Status(context.Context, *StatusRequest) (*StatusResponse, error)
+	// GetAsset serves the JavaScript a UI contribution names. Dusk serves it
+	// from its own origin, so a plugin's view never reaches the network.
+	GetAsset(*GetAssetRequest, grpc.ServerStreamingServer[GetAssetResponse]) error
 	mustEmbedUnimplementedPluginServiceServer()
 }
 
@@ -161,6 +185,9 @@ func (UnimplementedPluginServiceServer) Invoke(context.Context, *InvokeRequest) 
 }
 func (UnimplementedPluginServiceServer) Status(context.Context, *StatusRequest) (*StatusResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Status not implemented")
+}
+func (UnimplementedPluginServiceServer) GetAsset(*GetAssetRequest, grpc.ServerStreamingServer[GetAssetResponse]) error {
+	return status.Error(codes.Unimplemented, "method GetAsset not implemented")
 }
 func (UnimplementedPluginServiceServer) mustEmbedUnimplementedPluginServiceServer() {}
 func (UnimplementedPluginServiceServer) testEmbeddedByValue()                       {}
@@ -284,6 +311,17 @@ func _PluginService_Status_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PluginService_GetAsset_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetAssetRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(PluginServiceServer).GetAsset(m, &grpc.GenericServerStream[GetAssetRequest, GetAssetResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type PluginService_GetAssetServer = grpc.ServerStreamingServer[GetAssetResponse]
+
 // PluginService_ServiceDesc is the grpc.ServiceDesc for PluginService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -316,6 +354,11 @@ var PluginService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "Ingest",
 			Handler:       _PluginService_Ingest_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "GetAsset",
+			Handler:       _PluginService_GetAsset_Handler,
 			ServerStreams: true,
 		},
 	},
