@@ -38,6 +38,30 @@ message ActionDescriptor {
 
   // Entity kinds this action applies to. Empty means plugin-scoped.
   repeated string applies_to_kinds = 7;
+
+  // Then declares what this action may ask Dusk to run after it.
+  //
+  // A plugin composes by naming a catalog ref rather than by dialing another
+  // plugin's socket, so approval covers the whole chain before anything runs
+  // and every step is recorded. An invocation may only return follow-on steps
+  // whose action names appear here: without that, approving a chain would mean
+  // approving whatever the plugin decided to append once it was running.
+  repeated Next then = 8;
+}
+
+// Next is one step in a composition: an action to run after the one declaring
+// or returning it, named by catalog ref rather than by reaching for a socket.
+message Next {
+  // Ref of the entity the step targets. Empty means the entity the invocation
+  // that produced this step was itself targeting.
+  string ref = 1;
+
+  string action = 2;
+
+  // Params are set when a step is returned by an invocation, which is the
+  // point at which the concrete arguments are known. A declared step leaves
+  // them empty: it states what may follow, not with what.
+  google.protobuf.Struct params = 3;
 }
 
 // ConfigFieldType is closed: Dusk renders a form from it, so an unknown type
@@ -74,6 +98,31 @@ message ConfigField {
 
 message DescribeRequest {}
 
+// SourceBudget is how a plugin says several of its configurations draw on one
+// upstream quota, so two of them observing one server queue behind each other
+// and two observing different servers do not (ADR-0011).
+//
+// Dusk meters runs rather than requests. It starts an observation; what a
+// plugin then does upstream happens inside the plugin's own process and is not
+// visible to the host, so a request count would be a number Dusk could not
+// hold itself to.
+message SourceBudget {
+  // KeyFields names the config fields whose values identify the upstream
+  // system. Empty means every configuration is its own source, which is the
+  // safe default: a plugin that has not thought about this is not throttled by
+  // accident.
+  repeated string key_fields = 1;
+
+  // MaxConcurrent is how many runs may be in flight against one source. Zero
+  // means one, because two observations of one system racing is rarely what
+  // anybody wanted.
+  int32 max_concurrent = 2;
+
+  // MinSpacingSeconds is how long Dusk leaves between two runs against one
+  // source. Zero means none.
+  int32 min_spacing_seconds = 3;
+}
+
 message DescribeResponse {
   string plugin_id = 1;
   string version = 2;
@@ -85,11 +134,88 @@ message DescribeResponse {
   repeated ActionDescriptor actions = 5;
   repeated ConfigField config_fields = 6;
   repeated UIContribution ui = 7;
+
+  SourceBudget budget = 8;
 }
 
-// UIContribution is a view a plugin renders itself, as a custom element rather
-// than a React component, so the plugin's own tooling stays its own business
-// and Dusk's React can be upgraded without breaking it.
+// UISlot names where a contribution mounts.
+enum UISlot {
+  // Unspecified is the entity page, which is where a view about a thing goes
+  // and was the only slot before there was a choice.
+  UI_SLOT_UNSPECIFIED = 0;
+  UI_SLOT_ENTITY = 1;
+
+  // Plugin is the plugin's own page in the admin UI, which is where a view
+  // that is about the plugin rather than about one entity belongs. Creating
+  // something the plugin does not observe yet has no entity to mount against.
+  UI_SLOT_PLUGIN = 2;
+}
+
+// ViewLayout is closed, because Dusk renders it. An unknown layout has no
+// rendering, and a vocabulary that grows by release is the point: this is
+// deliberately not a layout language (ADR-0020).
+enum ViewLayout {
+  VIEW_LAYOUT_UNSPECIFIED = 0;
+
+  // Table is one row per entity, one column per field.
+  VIEW_LAYOUT_TABLE = 1;
+
+  // List is one line per entity, fields joined.
+  VIEW_LAYOUT_LIST = 2;
+
+  // Badges is every field of one entity as a labelled chip.
+  VIEW_LAYOUT_BADGES = 3;
+}
+
+// ViewFormat is how one field is drawn.
+enum ViewFormat {
+  VIEW_FORMAT_UNSPECIFIED = 0;
+  VIEW_FORMAT_TEXT = 1;
+
+  // Code is monospaced, for identifiers and refs.
+  VIEW_FORMAT_CODE = 2;
+
+  // Badge is a chip, for a short status word.
+  VIEW_FORMAT_BADGE = 3;
+
+  // Link routes to the entity the value names, which only makes sense when
+  // the value is a ref.
+  VIEW_FORMAT_LINK = 4;
+
+  // Timestamp renders an RFC 3339 value as a readable time.
+  VIEW_FORMAT_TIMESTAMP = 5;
+}
+
+// ViewField is one thing a declared view shows.
+message ViewField {
+  // Source names what to read. The reserved names ref, kind, namespace, name,
+  // title and description read the entity's own fields; anything else is an
+  // attribute key.
+  string source = 1;
+
+  // Label is the column heading or chip label. Empty falls back to source.
+  string label = 2;
+
+  ViewFormat format = 3;
+}
+
+// ViewSpec is a view Dusk renders with its own React, from a description
+// rather than from a plugin's JavaScript. It is ADR-0020's tier 1: no asset,
+// no shadow DOM, no trust decision, and it is what most plugins should use.
+message ViewSpec {
+  ViewLayout layout = 1;
+  repeated ViewField fields = 2;
+
+  // Empty is what to say when there is nothing to show, in the plugin's own
+  // words. "No pods are running here" beats a generic blank.
+  string empty = 3;
+}
+
+// UIContribution is a view a plugin contributes.
+//
+// It is either declared, by setting spec, or drawn by the plugin itself, by
+// setting element and asset. Declared is tier 1 and needs no trust decision;
+// an element is tier 2 and runs JavaScript in Dusk's origin (ADR-0020).
 message UIContribution {
   // Element is the custom element tag, which must contain a hyphen.
   string element = 1;
@@ -101,8 +227,14 @@ message UIContribution {
   // plugin emits, which is the common case.
   repeated string applies_to_kinds = 3;
 
-  // Title labels the block the element is rendered in.
+  // Title labels the block the view is rendered in.
   string title = 4;
+
+  UISlot slot = 5;
+
+  // Spec makes this a declared view. Set it or set element and asset, never
+  // both: two renderings of one contribution is one too many.
+  ViewSpec spec = 6;
 }
 
 message ValidateConfigRequest {
@@ -136,6 +268,11 @@ message DryRunRequest {
   string ref = 1;
   string action = 2;
   google.protobuf.Struct params = 3;
+
+  // Config is the configuration of the instance that observed this entity, not
+  // the plugin's first one. A plugin watching two clusters must act on the one
+  // the target actually lives in.
+  google.protobuf.Struct config = 4;
 }
 
 // DryRunResponse makes "not supported" explicit rather than absent. Dry run is
@@ -150,7 +287,8 @@ message DryRunResponse {
 
 message InvokeRequest {
   // Entity ref. Actions are entity-scoped so the target is a catalog
-  // identity rather than a free-form string.
+  // identity rather than a free-form string. Empty for a plugin-scoped action,
+  // which is one that is not about a single entity.
   string ref = 1;
 
   string action = 2;
@@ -158,6 +296,11 @@ message InvokeRequest {
 
   // Opaque, issued by Dusk. Plugins do not validate it; Dusk does.
   string proof_token = 4;
+
+  // Config is the configuration of the instance that observed this entity, not
+  // the plugin's first one. A plugin watching two clusters must act on the one
+  // the target actually lives in.
+  google.protobuf.Struct config = 5;
 }
 
 message InvokeResponse {
@@ -168,6 +311,15 @@ message InvokeResponse {
   bool ok = 3;
   string message = 4;
   google.protobuf.Struct detail = 5;
+
+  // Then asks Dusk to run further actions, each of which it resolves, approves
+  // and invokes itself. Only action names the descriptor already declared in
+  // its own `then` are accepted, so a chain cannot grow past what was approved.
+  repeated Next then = 6;
+
+  // Observed names entity refs this invocation changed, so the catalog can
+  // refresh them rather than serving what it saw before the action ran.
+  repeated string changed = 7;
 }
 
 message StatusRequest {

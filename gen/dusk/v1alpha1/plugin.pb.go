@@ -137,6 +137,183 @@ func (ConfigFieldType) EnumDescriptor() ([]byte, []int) {
 	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{1}
 }
 
+// UISlot names where a contribution mounts.
+type UISlot int32
+
+const (
+	// Unspecified is the entity page, which is where a view about a thing goes
+	// and was the only slot before there was a choice.
+	UISlot_UI_SLOT_UNSPECIFIED UISlot = 0
+	UISlot_UI_SLOT_ENTITY      UISlot = 1
+	// Plugin is the plugin's own page in the admin UI, which is where a view
+	// that is about the plugin rather than about one entity belongs. Creating
+	// something the plugin does not observe yet has no entity to mount against.
+	UISlot_UI_SLOT_PLUGIN UISlot = 2
+)
+
+// Enum value maps for UISlot.
+var (
+	UISlot_name = map[int32]string{
+		0: "UI_SLOT_UNSPECIFIED",
+		1: "UI_SLOT_ENTITY",
+		2: "UI_SLOT_PLUGIN",
+	}
+	UISlot_value = map[string]int32{
+		"UI_SLOT_UNSPECIFIED": 0,
+		"UI_SLOT_ENTITY":      1,
+		"UI_SLOT_PLUGIN":      2,
+	}
+)
+
+func (x UISlot) Enum() *UISlot {
+	p := new(UISlot)
+	*p = x
+	return p
+}
+
+func (x UISlot) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (UISlot) Descriptor() protoreflect.EnumDescriptor {
+	return file_dusk_v1alpha1_plugin_proto_enumTypes[2].Descriptor()
+}
+
+func (UISlot) Type() protoreflect.EnumType {
+	return &file_dusk_v1alpha1_plugin_proto_enumTypes[2]
+}
+
+func (x UISlot) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use UISlot.Descriptor instead.
+func (UISlot) EnumDescriptor() ([]byte, []int) {
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{2}
+}
+
+// ViewLayout is closed, because Dusk renders it. An unknown layout has no
+// rendering, and a vocabulary that grows by release is the point: this is
+// deliberately not a layout language (ADR-0020).
+type ViewLayout int32
+
+const (
+	ViewLayout_VIEW_LAYOUT_UNSPECIFIED ViewLayout = 0
+	// Table is one row per entity, one column per field.
+	ViewLayout_VIEW_LAYOUT_TABLE ViewLayout = 1
+	// List is one line per entity, fields joined.
+	ViewLayout_VIEW_LAYOUT_LIST ViewLayout = 2
+	// Badges is every field of one entity as a labelled chip.
+	ViewLayout_VIEW_LAYOUT_BADGES ViewLayout = 3
+)
+
+// Enum value maps for ViewLayout.
+var (
+	ViewLayout_name = map[int32]string{
+		0: "VIEW_LAYOUT_UNSPECIFIED",
+		1: "VIEW_LAYOUT_TABLE",
+		2: "VIEW_LAYOUT_LIST",
+		3: "VIEW_LAYOUT_BADGES",
+	}
+	ViewLayout_value = map[string]int32{
+		"VIEW_LAYOUT_UNSPECIFIED": 0,
+		"VIEW_LAYOUT_TABLE":       1,
+		"VIEW_LAYOUT_LIST":        2,
+		"VIEW_LAYOUT_BADGES":      3,
+	}
+)
+
+func (x ViewLayout) Enum() *ViewLayout {
+	p := new(ViewLayout)
+	*p = x
+	return p
+}
+
+func (x ViewLayout) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ViewLayout) Descriptor() protoreflect.EnumDescriptor {
+	return file_dusk_v1alpha1_plugin_proto_enumTypes[3].Descriptor()
+}
+
+func (ViewLayout) Type() protoreflect.EnumType {
+	return &file_dusk_v1alpha1_plugin_proto_enumTypes[3]
+}
+
+func (x ViewLayout) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ViewLayout.Descriptor instead.
+func (ViewLayout) EnumDescriptor() ([]byte, []int) {
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{3}
+}
+
+// ViewFormat is how one field is drawn.
+type ViewFormat int32
+
+const (
+	ViewFormat_VIEW_FORMAT_UNSPECIFIED ViewFormat = 0
+	ViewFormat_VIEW_FORMAT_TEXT        ViewFormat = 1
+	// Code is monospaced, for identifiers and refs.
+	ViewFormat_VIEW_FORMAT_CODE ViewFormat = 2
+	// Badge is a chip, for a short status word.
+	ViewFormat_VIEW_FORMAT_BADGE ViewFormat = 3
+	// Link routes to the entity the value names, which only makes sense when
+	// the value is a ref.
+	ViewFormat_VIEW_FORMAT_LINK ViewFormat = 4
+	// Timestamp renders an RFC 3339 value as a readable time.
+	ViewFormat_VIEW_FORMAT_TIMESTAMP ViewFormat = 5
+)
+
+// Enum value maps for ViewFormat.
+var (
+	ViewFormat_name = map[int32]string{
+		0: "VIEW_FORMAT_UNSPECIFIED",
+		1: "VIEW_FORMAT_TEXT",
+		2: "VIEW_FORMAT_CODE",
+		3: "VIEW_FORMAT_BADGE",
+		4: "VIEW_FORMAT_LINK",
+		5: "VIEW_FORMAT_TIMESTAMP",
+	}
+	ViewFormat_value = map[string]int32{
+		"VIEW_FORMAT_UNSPECIFIED": 0,
+		"VIEW_FORMAT_TEXT":        1,
+		"VIEW_FORMAT_CODE":        2,
+		"VIEW_FORMAT_BADGE":       3,
+		"VIEW_FORMAT_LINK":        4,
+		"VIEW_FORMAT_TIMESTAMP":   5,
+	}
+)
+
+func (x ViewFormat) Enum() *ViewFormat {
+	p := new(ViewFormat)
+	*p = x
+	return p
+}
+
+func (x ViewFormat) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ViewFormat) Descriptor() protoreflect.EnumDescriptor {
+	return file_dusk_v1alpha1_plugin_proto_enumTypes[4].Descriptor()
+}
+
+func (ViewFormat) Type() protoreflect.EnumType {
+	return &file_dusk_v1alpha1_plugin_proto_enumTypes[4]
+}
+
+func (x ViewFormat) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ViewFormat.Descriptor instead.
+func (ViewFormat) EnumDescriptor() ([]byte, []int) {
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{4}
+}
+
 // ActionDescriptor declares one invocable action.
 //
 // Declaring an action does not enable it. Actions are denied by default and
@@ -155,8 +332,16 @@ type ActionDescriptor struct {
 	Async bool `protobuf:"varint,6,opt,name=async,proto3" json:"async,omitempty"`
 	// Entity kinds this action applies to. Empty means plugin-scoped.
 	AppliesToKinds []string `protobuf:"bytes,7,rep,name=applies_to_kinds,json=appliesToKinds,proto3" json:"applies_to_kinds,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	// Then declares what this action may ask Dusk to run after it.
+	//
+	// A plugin composes by naming a catalog ref rather than by dialing another
+	// plugin's socket, so approval covers the whole chain before anything runs
+	// and every step is recorded. An invocation may only return follow-on steps
+	// whose action names appear here: without that, approving a chain would mean
+	// approving whatever the plugin decided to append once it was running.
+	Then          []*Next `protobuf:"bytes,8,rep,name=then,proto3" json:"then,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ActionDescriptor) Reset() {
@@ -238,6 +423,80 @@ func (x *ActionDescriptor) GetAppliesToKinds() []string {
 	return nil
 }
 
+func (x *ActionDescriptor) GetThen() []*Next {
+	if x != nil {
+		return x.Then
+	}
+	return nil
+}
+
+// Next is one step in a composition: an action to run after the one declaring
+// or returning it, named by catalog ref rather than by reaching for a socket.
+type Next struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Ref of the entity the step targets. Empty means the entity the invocation
+	// that produced this step was itself targeting.
+	Ref    string `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
+	Action string `protobuf:"bytes,2,opt,name=action,proto3" json:"action,omitempty"`
+	// Params are set when a step is returned by an invocation, which is the
+	// point at which the concrete arguments are known. A declared step leaves
+	// them empty: it states what may follow, not with what.
+	Params        *structpb.Struct `protobuf:"bytes,3,opt,name=params,proto3" json:"params,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Next) Reset() {
+	*x = Next{}
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Next) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Next) ProtoMessage() {}
+
+func (x *Next) ProtoReflect() protoreflect.Message {
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Next.ProtoReflect.Descriptor instead.
+func (*Next) Descriptor() ([]byte, []int) {
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *Next) GetRef() string {
+	if x != nil {
+		return x.Ref
+	}
+	return ""
+}
+
+func (x *Next) GetAction() string {
+	if x != nil {
+		return x.Action
+	}
+	return ""
+}
+
+func (x *Next) GetParams() *structpb.Struct {
+	if x != nil {
+		return x.Params
+	}
+	return nil
+}
+
 // ConfigField is one setting in the plugin's admin form.
 type ConfigField struct {
 	state        protoimpl.MessageState `protogen:"open.v1"`
@@ -261,7 +520,7 @@ type ConfigField struct {
 
 func (x *ConfigField) Reset() {
 	*x = ConfigField{}
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[1]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -273,7 +532,7 @@ func (x *ConfigField) String() string {
 func (*ConfigField) ProtoMessage() {}
 
 func (x *ConfigField) ProtoReflect() protoreflect.Message {
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[1]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -286,7 +545,7 @@ func (x *ConfigField) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConfigField.ProtoReflect.Descriptor instead.
 func (*ConfigField) Descriptor() ([]byte, []int) {
-	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{1}
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *ConfigField) GetName() string {
@@ -360,7 +619,7 @@ type DescribeRequest struct {
 
 func (x *DescribeRequest) Reset() {
 	*x = DescribeRequest{}
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[2]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -372,7 +631,7 @@ func (x *DescribeRequest) String() string {
 func (*DescribeRequest) ProtoMessage() {}
 
 func (x *DescribeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[2]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -385,7 +644,84 @@ func (x *DescribeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DescribeRequest.ProtoReflect.Descriptor instead.
 func (*DescribeRequest) Descriptor() ([]byte, []int) {
-	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{2}
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{3}
+}
+
+// SourceBudget is how a plugin says several of its configurations draw on one
+// upstream quota, so two of them observing one server queue behind each other
+// and two observing different servers do not (ADR-0011).
+//
+// Dusk meters runs rather than requests. It starts an observation; what a
+// plugin then does upstream happens inside the plugin's own process and is not
+// visible to the host, so a request count would be a number Dusk could not
+// hold itself to.
+type SourceBudget struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// KeyFields names the config fields whose values identify the upstream
+	// system. Empty means every configuration is its own source, which is the
+	// safe default: a plugin that has not thought about this is not throttled by
+	// accident.
+	KeyFields []string `protobuf:"bytes,1,rep,name=key_fields,json=keyFields,proto3" json:"key_fields,omitempty"`
+	// MaxConcurrent is how many runs may be in flight against one source. Zero
+	// means one, because two observations of one system racing is rarely what
+	// anybody wanted.
+	MaxConcurrent int32 `protobuf:"varint,2,opt,name=max_concurrent,json=maxConcurrent,proto3" json:"max_concurrent,omitempty"`
+	// MinSpacingSeconds is how long Dusk leaves between two runs against one
+	// source. Zero means none.
+	MinSpacingSeconds int32 `protobuf:"varint,3,opt,name=min_spacing_seconds,json=minSpacingSeconds,proto3" json:"min_spacing_seconds,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *SourceBudget) Reset() {
+	*x = SourceBudget{}
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SourceBudget) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SourceBudget) ProtoMessage() {}
+
+func (x *SourceBudget) ProtoReflect() protoreflect.Message {
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SourceBudget.ProtoReflect.Descriptor instead.
+func (*SourceBudget) Descriptor() ([]byte, []int) {
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *SourceBudget) GetKeyFields() []string {
+	if x != nil {
+		return x.KeyFields
+	}
+	return nil
+}
+
+func (x *SourceBudget) GetMaxConcurrent() int32 {
+	if x != nil {
+		return x.MaxConcurrent
+	}
+	return 0
+}
+
+func (x *SourceBudget) GetMinSpacingSeconds() int32 {
+	if x != nil {
+		return x.MinSpacingSeconds
+	}
+	return 0
 }
 
 type DescribeResponse struct {
@@ -398,13 +734,14 @@ type DescribeResponse struct {
 	Actions       []*ActionDescriptor `protobuf:"bytes,5,rep,name=actions,proto3" json:"actions,omitempty"`
 	ConfigFields  []*ConfigField      `protobuf:"bytes,6,rep,name=config_fields,json=configFields,proto3" json:"config_fields,omitempty"`
 	Ui            []*UIContribution   `protobuf:"bytes,7,rep,name=ui,proto3" json:"ui,omitempty"`
+	Budget        *SourceBudget       `protobuf:"bytes,8,opt,name=budget,proto3" json:"budget,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *DescribeResponse) Reset() {
 	*x = DescribeResponse{}
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[3]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -416,7 +753,7 @@ func (x *DescribeResponse) String() string {
 func (*DescribeResponse) ProtoMessage() {}
 
 func (x *DescribeResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[3]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -429,7 +766,7 @@ func (x *DescribeResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DescribeResponse.ProtoReflect.Descriptor instead.
 func (*DescribeResponse) Descriptor() ([]byte, []int) {
-	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{3}
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *DescribeResponse) GetPluginId() string {
@@ -481,9 +818,148 @@ func (x *DescribeResponse) GetUi() []*UIContribution {
 	return nil
 }
 
-// UIContribution is a view a plugin renders itself, as a custom element rather
-// than a React component, so the plugin's own tooling stays its own business
-// and Dusk's React can be upgraded without breaking it.
+func (x *DescribeResponse) GetBudget() *SourceBudget {
+	if x != nil {
+		return x.Budget
+	}
+	return nil
+}
+
+// ViewField is one thing a declared view shows.
+type ViewField struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Source names what to read. The reserved names ref, kind, namespace, name,
+	// title and description read the entity's own fields; anything else is an
+	// attribute key.
+	Source string `protobuf:"bytes,1,opt,name=source,proto3" json:"source,omitempty"`
+	// Label is the column heading or chip label. Empty falls back to source.
+	Label         string     `protobuf:"bytes,2,opt,name=label,proto3" json:"label,omitempty"`
+	Format        ViewFormat `protobuf:"varint,3,opt,name=format,proto3,enum=dusk.v1alpha1.ViewFormat" json:"format,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ViewField) Reset() {
+	*x = ViewField{}
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ViewField) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ViewField) ProtoMessage() {}
+
+func (x *ViewField) ProtoReflect() protoreflect.Message {
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ViewField.ProtoReflect.Descriptor instead.
+func (*ViewField) Descriptor() ([]byte, []int) {
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *ViewField) GetSource() string {
+	if x != nil {
+		return x.Source
+	}
+	return ""
+}
+
+func (x *ViewField) GetLabel() string {
+	if x != nil {
+		return x.Label
+	}
+	return ""
+}
+
+func (x *ViewField) GetFormat() ViewFormat {
+	if x != nil {
+		return x.Format
+	}
+	return ViewFormat_VIEW_FORMAT_UNSPECIFIED
+}
+
+// ViewSpec is a view Dusk renders with its own React, from a description
+// rather than from a plugin's JavaScript. It is ADR-0020's tier 1: no asset,
+// no shadow DOM, no trust decision, and it is what most plugins should use.
+type ViewSpec struct {
+	state  protoimpl.MessageState `protogen:"open.v1"`
+	Layout ViewLayout             `protobuf:"varint,1,opt,name=layout,proto3,enum=dusk.v1alpha1.ViewLayout" json:"layout,omitempty"`
+	Fields []*ViewField           `protobuf:"bytes,2,rep,name=fields,proto3" json:"fields,omitempty"`
+	// Empty is what to say when there is nothing to show, in the plugin's own
+	// words. "No pods are running here" beats a generic blank.
+	Empty         string `protobuf:"bytes,3,opt,name=empty,proto3" json:"empty,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ViewSpec) Reset() {
+	*x = ViewSpec{}
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ViewSpec) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ViewSpec) ProtoMessage() {}
+
+func (x *ViewSpec) ProtoReflect() protoreflect.Message {
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ViewSpec.ProtoReflect.Descriptor instead.
+func (*ViewSpec) Descriptor() ([]byte, []int) {
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *ViewSpec) GetLayout() ViewLayout {
+	if x != nil {
+		return x.Layout
+	}
+	return ViewLayout_VIEW_LAYOUT_UNSPECIFIED
+}
+
+func (x *ViewSpec) GetFields() []*ViewField {
+	if x != nil {
+		return x.Fields
+	}
+	return nil
+}
+
+func (x *ViewSpec) GetEmpty() string {
+	if x != nil {
+		return x.Empty
+	}
+	return ""
+}
+
+// UIContribution is a view a plugin contributes.
+//
+// It is either declared, by setting spec, or drawn by the plugin itself, by
+// setting element and asset. Declared is tier 1 and needs no trust decision;
+// an element is tier 2 and runs JavaScript in Dusk's origin (ADR-0020).
 type UIContribution struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Element is the custom element tag, which must contain a hyphen.
@@ -493,15 +969,19 @@ type UIContribution struct {
 	// AppliesToKinds limits where it mounts. Empty means every entity this
 	// plugin emits, which is the common case.
 	AppliesToKinds []string `protobuf:"bytes,3,rep,name=applies_to_kinds,json=appliesToKinds,proto3" json:"applies_to_kinds,omitempty"`
-	// Title labels the block the element is rendered in.
-	Title         string `protobuf:"bytes,4,opt,name=title,proto3" json:"title,omitempty"`
+	// Title labels the block the view is rendered in.
+	Title string `protobuf:"bytes,4,opt,name=title,proto3" json:"title,omitempty"`
+	Slot  UISlot `protobuf:"varint,5,opt,name=slot,proto3,enum=dusk.v1alpha1.UISlot" json:"slot,omitempty"`
+	// Spec makes this a declared view. Set it or set element and asset, never
+	// both: two renderings of one contribution is one too many.
+	Spec          *ViewSpec `protobuf:"bytes,6,opt,name=spec,proto3" json:"spec,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *UIContribution) Reset() {
 	*x = UIContribution{}
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[4]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -513,7 +993,7 @@ func (x *UIContribution) String() string {
 func (*UIContribution) ProtoMessage() {}
 
 func (x *UIContribution) ProtoReflect() protoreflect.Message {
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[4]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -526,7 +1006,7 @@ func (x *UIContribution) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UIContribution.ProtoReflect.Descriptor instead.
 func (*UIContribution) Descriptor() ([]byte, []int) {
-	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{4}
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *UIContribution) GetElement() string {
@@ -557,6 +1037,20 @@ func (x *UIContribution) GetTitle() string {
 	return ""
 }
 
+func (x *UIContribution) GetSlot() UISlot {
+	if x != nil {
+		return x.Slot
+	}
+	return UISlot_UI_SLOT_UNSPECIFIED
+}
+
+func (x *UIContribution) GetSpec() *ViewSpec {
+	if x != nil {
+		return x.Spec
+	}
+	return nil
+}
+
 type ValidateConfigRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Config        *structpb.Struct       `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
@@ -566,7 +1060,7 @@ type ValidateConfigRequest struct {
 
 func (x *ValidateConfigRequest) Reset() {
 	*x = ValidateConfigRequest{}
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[5]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -578,7 +1072,7 @@ func (x *ValidateConfigRequest) String() string {
 func (*ValidateConfigRequest) ProtoMessage() {}
 
 func (x *ValidateConfigRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[5]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -591,7 +1085,7 @@ func (x *ValidateConfigRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ValidateConfigRequest.ProtoReflect.Descriptor instead.
 func (*ValidateConfigRequest) Descriptor() ([]byte, []int) {
-	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{5}
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *ValidateConfigRequest) GetConfig() *structpb.Struct {
@@ -616,7 +1110,7 @@ type ValidateConfigResponse struct {
 
 func (x *ValidateConfigResponse) Reset() {
 	*x = ValidateConfigResponse{}
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[6]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -628,7 +1122,7 @@ func (x *ValidateConfigResponse) String() string {
 func (*ValidateConfigResponse) ProtoMessage() {}
 
 func (x *ValidateConfigResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[6]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -641,7 +1135,7 @@ func (x *ValidateConfigResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ValidateConfigResponse.ProtoReflect.Descriptor instead.
 func (*ValidateConfigResponse) Descriptor() ([]byte, []int) {
-	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{6}
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *ValidateConfigResponse) GetOk() bool {
@@ -674,7 +1168,7 @@ type IngestRequest struct {
 
 func (x *IngestRequest) Reset() {
 	*x = IngestRequest{}
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[7]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -686,7 +1180,7 @@ func (x *IngestRequest) String() string {
 func (*IngestRequest) ProtoMessage() {}
 
 func (x *IngestRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[7]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -699,7 +1193,7 @@ func (x *IngestRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IngestRequest.ProtoReflect.Descriptor instead.
 func (*IngestRequest) Descriptor() ([]byte, []int) {
-	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{7}
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *IngestRequest) GetConfig() *structpb.Struct {
@@ -720,7 +1214,7 @@ type IngestResponse struct {
 
 func (x *IngestResponse) Reset() {
 	*x = IngestResponse{}
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[8]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -732,7 +1226,7 @@ func (x *IngestResponse) String() string {
 func (*IngestResponse) ProtoMessage() {}
 
 func (x *IngestResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[8]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -745,7 +1239,7 @@ func (x *IngestResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IngestResponse.ProtoReflect.Descriptor instead.
 func (*IngestResponse) Descriptor() ([]byte, []int) {
-	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{8}
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *IngestResponse) GetBatch() *IngestBatch {
@@ -758,17 +1252,21 @@ func (x *IngestResponse) GetBatch() *IngestBatch {
 // DryRunRequest carries no proof token: previewing is not mutating, so the
 // read-before-write gate does not apply.
 type DryRunRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Ref           string                 `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
-	Action        string                 `protobuf:"bytes,2,opt,name=action,proto3" json:"action,omitempty"`
-	Params        *structpb.Struct       `protobuf:"bytes,3,opt,name=params,proto3" json:"params,omitempty"`
+	state  protoimpl.MessageState `protogen:"open.v1"`
+	Ref    string                 `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
+	Action string                 `protobuf:"bytes,2,opt,name=action,proto3" json:"action,omitempty"`
+	Params *structpb.Struct       `protobuf:"bytes,3,opt,name=params,proto3" json:"params,omitempty"`
+	// Config is the configuration of the instance that observed this entity, not
+	// the plugin's first one. A plugin watching two clusters must act on the one
+	// the target actually lives in.
+	Config        *structpb.Struct `protobuf:"bytes,4,opt,name=config,proto3" json:"config,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *DryRunRequest) Reset() {
 	*x = DryRunRequest{}
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[9]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -780,7 +1278,7 @@ func (x *DryRunRequest) String() string {
 func (*DryRunRequest) ProtoMessage() {}
 
 func (x *DryRunRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[9]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -793,7 +1291,7 @@ func (x *DryRunRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DryRunRequest.ProtoReflect.Descriptor instead.
 func (*DryRunRequest) Descriptor() ([]byte, []int) {
-	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{9}
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *DryRunRequest) GetRef() string {
@@ -817,6 +1315,13 @@ func (x *DryRunRequest) GetParams() *structpb.Struct {
 	return nil
 }
 
+func (x *DryRunRequest) GetConfig() *structpb.Struct {
+	if x != nil {
+		return x.Config
+	}
+	return nil
+}
+
 // DryRunResponse makes "not supported" explicit rather than absent. Dry run is
 // required of every action; supported=false is a valid answer, and Dusk
 // surfaces it at approval time so a human knows a destructive action cannot
@@ -832,7 +1337,7 @@ type DryRunResponse struct {
 
 func (x *DryRunResponse) Reset() {
 	*x = DryRunResponse{}
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[10]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -844,7 +1349,7 @@ func (x *DryRunResponse) String() string {
 func (*DryRunResponse) ProtoMessage() {}
 
 func (x *DryRunResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[10]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -857,7 +1362,7 @@ func (x *DryRunResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DryRunResponse.ProtoReflect.Descriptor instead.
 func (*DryRunResponse) Descriptor() ([]byte, []int) {
-	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{10}
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *DryRunResponse) GetSupported() bool {
@@ -884,19 +1389,24 @@ func (x *DryRunResponse) GetDetail() *structpb.Struct {
 type InvokeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Entity ref. Actions are entity-scoped so the target is a catalog
-	// identity rather than a free-form string.
+	// identity rather than a free-form string. Empty for a plugin-scoped action,
+	// which is one that is not about a single entity.
 	Ref    string           `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
 	Action string           `protobuf:"bytes,2,opt,name=action,proto3" json:"action,omitempty"`
 	Params *structpb.Struct `protobuf:"bytes,3,opt,name=params,proto3" json:"params,omitempty"`
 	// Opaque, issued by Dusk. Plugins do not validate it; Dusk does.
-	ProofToken    string `protobuf:"bytes,4,opt,name=proof_token,json=proofToken,proto3" json:"proof_token,omitempty"`
+	ProofToken string `protobuf:"bytes,4,opt,name=proof_token,json=proofToken,proto3" json:"proof_token,omitempty"`
+	// Config is the configuration of the instance that observed this entity, not
+	// the plugin's first one. A plugin watching two clusters must act on the one
+	// the target actually lives in.
+	Config        *structpb.Struct `protobuf:"bytes,5,opt,name=config,proto3" json:"config,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *InvokeRequest) Reset() {
 	*x = InvokeRequest{}
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[11]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -908,7 +1418,7 @@ func (x *InvokeRequest) String() string {
 func (*InvokeRequest) ProtoMessage() {}
 
 func (x *InvokeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[11]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -921,7 +1431,7 @@ func (x *InvokeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InvokeRequest.ProtoReflect.Descriptor instead.
 func (*InvokeRequest) Descriptor() ([]byte, []int) {
-	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{11}
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *InvokeRequest) GetRef() string {
@@ -952,21 +1462,35 @@ func (x *InvokeRequest) GetProofToken() string {
 	return ""
 }
 
+func (x *InvokeRequest) GetConfig() *structpb.Struct {
+	if x != nil {
+		return x.Config
+	}
+	return nil
+}
+
 type InvokeResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Set when the action is async; poll Status with it.
-	Handle        string           `protobuf:"bytes,1,opt,name=handle,proto3" json:"handle,omitempty"`
-	Done          bool             `protobuf:"varint,2,opt,name=done,proto3" json:"done,omitempty"`
-	Ok            bool             `protobuf:"varint,3,opt,name=ok,proto3" json:"ok,omitempty"`
-	Message       string           `protobuf:"bytes,4,opt,name=message,proto3" json:"message,omitempty"`
-	Detail        *structpb.Struct `protobuf:"bytes,5,opt,name=detail,proto3" json:"detail,omitempty"`
+	Handle  string           `protobuf:"bytes,1,opt,name=handle,proto3" json:"handle,omitempty"`
+	Done    bool             `protobuf:"varint,2,opt,name=done,proto3" json:"done,omitempty"`
+	Ok      bool             `protobuf:"varint,3,opt,name=ok,proto3" json:"ok,omitempty"`
+	Message string           `protobuf:"bytes,4,opt,name=message,proto3" json:"message,omitempty"`
+	Detail  *structpb.Struct `protobuf:"bytes,5,opt,name=detail,proto3" json:"detail,omitempty"`
+	// Then asks Dusk to run further actions, each of which it resolves, approves
+	// and invokes itself. Only action names the descriptor already declared in
+	// its own `then` are accepted, so a chain cannot grow past what was approved.
+	Then []*Next `protobuf:"bytes,6,rep,name=then,proto3" json:"then,omitempty"`
+	// Observed names entity refs this invocation changed, so the catalog can
+	// refresh them rather than serving what it saw before the action ran.
+	Changed       []string `protobuf:"bytes,7,rep,name=changed,proto3" json:"changed,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *InvokeResponse) Reset() {
 	*x = InvokeResponse{}
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[12]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -978,7 +1502,7 @@ func (x *InvokeResponse) String() string {
 func (*InvokeResponse) ProtoMessage() {}
 
 func (x *InvokeResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[12]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -991,7 +1515,7 @@ func (x *InvokeResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InvokeResponse.ProtoReflect.Descriptor instead.
 func (*InvokeResponse) Descriptor() ([]byte, []int) {
-	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{12}
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *InvokeResponse) GetHandle() string {
@@ -1029,6 +1553,20 @@ func (x *InvokeResponse) GetDetail() *structpb.Struct {
 	return nil
 }
 
+func (x *InvokeResponse) GetThen() []*Next {
+	if x != nil {
+		return x.Then
+	}
+	return nil
+}
+
+func (x *InvokeResponse) GetChanged() []string {
+	if x != nil {
+		return x.Changed
+	}
+	return nil
+}
+
 type StatusRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Handle        string                 `protobuf:"bytes,1,opt,name=handle,proto3" json:"handle,omitempty"`
@@ -1038,7 +1576,7 @@ type StatusRequest struct {
 
 func (x *StatusRequest) Reset() {
 	*x = StatusRequest{}
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[13]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1050,7 +1588,7 @@ func (x *StatusRequest) String() string {
 func (*StatusRequest) ProtoMessage() {}
 
 func (x *StatusRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[13]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1063,7 +1601,7 @@ func (x *StatusRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StatusRequest.ProtoReflect.Descriptor instead.
 func (*StatusRequest) Descriptor() ([]byte, []int) {
-	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{13}
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *StatusRequest) GetHandle() string {
@@ -1085,7 +1623,7 @@ type StatusResponse struct {
 
 func (x *StatusResponse) Reset() {
 	*x = StatusResponse{}
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[14]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1097,7 +1635,7 @@ func (x *StatusResponse) String() string {
 func (*StatusResponse) ProtoMessage() {}
 
 func (x *StatusResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[14]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1110,7 +1648,7 @@ func (x *StatusResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StatusResponse.ProtoReflect.Descriptor instead.
 func (*StatusResponse) Descriptor() ([]byte, []int) {
-	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{14}
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *StatusResponse) GetDone() bool {
@@ -1150,7 +1688,7 @@ type GetAssetRequest struct {
 
 func (x *GetAssetRequest) Reset() {
 	*x = GetAssetRequest{}
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[15]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1162,7 +1700,7 @@ func (x *GetAssetRequest) String() string {
 func (*GetAssetRequest) ProtoMessage() {}
 
 func (x *GetAssetRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[15]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1175,7 +1713,7 @@ func (x *GetAssetRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAssetRequest.ProtoReflect.Descriptor instead.
 func (*GetAssetRequest) Descriptor() ([]byte, []int) {
-	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{15}
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *GetAssetRequest) GetName() string {
@@ -1198,7 +1736,7 @@ type GetAssetResponse struct {
 
 func (x *GetAssetResponse) Reset() {
 	*x = GetAssetResponse{}
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[16]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1210,7 +1748,7 @@ func (x *GetAssetResponse) String() string {
 func (*GetAssetResponse) ProtoMessage() {}
 
 func (x *GetAssetResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[16]
+	mi := &file_dusk_v1alpha1_plugin_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1223,7 +1761,7 @@ func (x *GetAssetResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAssetResponse.ProtoReflect.Descriptor instead.
 func (*GetAssetResponse) Descriptor() ([]byte, []int) {
-	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{16}
+	return file_dusk_v1alpha1_plugin_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *GetAssetResponse) GetChunk() []byte {
@@ -1237,7 +1775,7 @@ var File_dusk_v1alpha1_plugin_proto protoreflect.FileDescriptor
 
 const file_dusk_v1alpha1_plugin_proto_rawDesc = "" +
 	"\n" +
-	"\x1adusk/v1alpha1/plugin.proto\x12\rdusk.v1alpha1\x1a\x1adusk/v1alpha1/entity.proto\x1a\x1cgoogle/protobuf/struct.proto\"\x97\x02\n" +
+	"\x1adusk/v1alpha1/plugin.proto\x12\rdusk.v1alpha1\x1a\x1adusk/v1alpha1/entity.proto\x1a\x1cgoogle/protobuf/struct.proto\"\xc0\x02\n" +
 	"\x10ActionDescriptor\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\x120\n" +
@@ -1246,7 +1784,12 @@ const file_dusk_v1alpha1_plugin_proto_rawDesc = "" +
 	"\n" +
 	"proof_from\x18\x05 \x01(\tR\tproofFrom\x12\x14\n" +
 	"\x05async\x18\x06 \x01(\bR\x05async\x12(\n" +
-	"\x10applies_to_kinds\x18\a \x03(\tR\x0eappliesToKinds\"\x99\x02\n" +
+	"\x10applies_to_kinds\x18\a \x03(\tR\x0eappliesToKinds\x12'\n" +
+	"\x04then\x18\b \x03(\v2\x13.dusk.v1alpha1.NextR\x04then\"a\n" +
+	"\x04Next\x12\x10\n" +
+	"\x03ref\x18\x01 \x01(\tR\x03ref\x12\x16\n" +
+	"\x06action\x18\x02 \x01(\tR\x06action\x12/\n" +
+	"\x06params\x18\x03 \x01(\v2\x17.google.protobuf.StructR\x06params\"\x99\x02\n" +
 	"\vConfigField\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x14\n" +
 	"\x05label\x18\x02 \x01(\tR\x05label\x12\x12\n" +
@@ -1258,7 +1801,12 @@ const file_dusk_v1alpha1_plugin_proto_rawDesc = "" +
 	"enumValues\x12\x18\n" +
 	"\apattern\x18\b \x01(\tR\apattern\x12\x1c\n" +
 	"\tsensitive\x18\t \x01(\bR\tsensitive\"\x11\n" +
-	"\x0fDescribeRequest\"\xbc\x02\n" +
+	"\x0fDescribeRequest\"\x84\x01\n" +
+	"\fSourceBudget\x12\x1d\n" +
+	"\n" +
+	"key_fields\x18\x01 \x03(\tR\tkeyFields\x12%\n" +
+	"\x0emax_concurrent\x18\x02 \x01(\x05R\rmaxConcurrent\x12.\n" +
+	"\x13min_spacing_seconds\x18\x03 \x01(\x05R\x11minSpacingSeconds\"\xf1\x02\n" +
 	"\x10DescribeResponse\x12\x1b\n" +
 	"\tplugin_id\x18\x01 \x01(\tR\bpluginId\x12\x18\n" +
 	"\aversion\x18\x02 \x01(\tR\aversion\x12%\n" +
@@ -1267,12 +1815,23 @@ const file_dusk_v1alpha1_plugin_proto_rawDesc = "" +
 	"emitsKinds\x129\n" +
 	"\aactions\x18\x05 \x03(\v2\x1f.dusk.v1alpha1.ActionDescriptorR\aactions\x12?\n" +
 	"\rconfig_fields\x18\x06 \x03(\v2\x1a.dusk.v1alpha1.ConfigFieldR\fconfigFields\x12-\n" +
-	"\x02ui\x18\a \x03(\v2\x1d.dusk.v1alpha1.UIContributionR\x02ui\"\x80\x01\n" +
+	"\x02ui\x18\a \x03(\v2\x1d.dusk.v1alpha1.UIContributionR\x02ui\x123\n" +
+	"\x06budget\x18\b \x01(\v2\x1b.dusk.v1alpha1.SourceBudgetR\x06budget\"l\n" +
+	"\tViewField\x12\x16\n" +
+	"\x06source\x18\x01 \x01(\tR\x06source\x12\x14\n" +
+	"\x05label\x18\x02 \x01(\tR\x05label\x121\n" +
+	"\x06format\x18\x03 \x01(\x0e2\x19.dusk.v1alpha1.ViewFormatR\x06format\"\x85\x01\n" +
+	"\bViewSpec\x121\n" +
+	"\x06layout\x18\x01 \x01(\x0e2\x19.dusk.v1alpha1.ViewLayoutR\x06layout\x120\n" +
+	"\x06fields\x18\x02 \x03(\v2\x18.dusk.v1alpha1.ViewFieldR\x06fields\x12\x14\n" +
+	"\x05empty\x18\x03 \x01(\tR\x05empty\"\xd8\x01\n" +
 	"\x0eUIContribution\x12\x18\n" +
 	"\aelement\x18\x01 \x01(\tR\aelement\x12\x14\n" +
 	"\x05asset\x18\x02 \x01(\tR\x05asset\x12(\n" +
 	"\x10applies_to_kinds\x18\x03 \x03(\tR\x0eappliesToKinds\x12\x14\n" +
-	"\x05title\x18\x04 \x01(\tR\x05title\"H\n" +
+	"\x05title\x18\x04 \x01(\tR\x05title\x12)\n" +
+	"\x04slot\x18\x05 \x01(\x0e2\x15.dusk.v1alpha1.UISlotR\x04slot\x12+\n" +
+	"\x04spec\x18\x06 \x01(\v2\x17.dusk.v1alpha1.ViewSpecR\x04spec\"H\n" +
 	"\x15ValidateConfigRequest\x12/\n" +
 	"\x06config\x18\x01 \x01(\v2\x17.google.protobuf.StructR\x06config\"\xdd\x01\n" +
 	"\x16ValidateConfigResponse\x12\x0e\n" +
@@ -1285,27 +1844,31 @@ const file_dusk_v1alpha1_plugin_proto_rawDesc = "" +
 	"\rIngestRequest\x12/\n" +
 	"\x06config\x18\x01 \x01(\v2\x17.google.protobuf.StructR\x06config\"B\n" +
 	"\x0eIngestResponse\x120\n" +
-	"\x05batch\x18\x01 \x01(\v2\x1a.dusk.v1alpha1.IngestBatchR\x05batch\"j\n" +
+	"\x05batch\x18\x01 \x01(\v2\x1a.dusk.v1alpha1.IngestBatchR\x05batch\"\x9b\x01\n" +
 	"\rDryRunRequest\x12\x10\n" +
 	"\x03ref\x18\x01 \x01(\tR\x03ref\x12\x16\n" +
 	"\x06action\x18\x02 \x01(\tR\x06action\x12/\n" +
-	"\x06params\x18\x03 \x01(\v2\x17.google.protobuf.StructR\x06params\"y\n" +
+	"\x06params\x18\x03 \x01(\v2\x17.google.protobuf.StructR\x06params\x12/\n" +
+	"\x06config\x18\x04 \x01(\v2\x17.google.protobuf.StructR\x06config\"y\n" +
 	"\x0eDryRunResponse\x12\x1c\n" +
 	"\tsupported\x18\x01 \x01(\bR\tsupported\x12\x18\n" +
 	"\asummary\x18\x02 \x01(\tR\asummary\x12/\n" +
-	"\x06detail\x18\x03 \x01(\v2\x17.google.protobuf.StructR\x06detail\"\x8b\x01\n" +
+	"\x06detail\x18\x03 \x01(\v2\x17.google.protobuf.StructR\x06detail\"\xbc\x01\n" +
 	"\rInvokeRequest\x12\x10\n" +
 	"\x03ref\x18\x01 \x01(\tR\x03ref\x12\x16\n" +
 	"\x06action\x18\x02 \x01(\tR\x06action\x12/\n" +
 	"\x06params\x18\x03 \x01(\v2\x17.google.protobuf.StructR\x06params\x12\x1f\n" +
 	"\vproof_token\x18\x04 \x01(\tR\n" +
-	"proofToken\"\x97\x01\n" +
+	"proofToken\x12/\n" +
+	"\x06config\x18\x05 \x01(\v2\x17.google.protobuf.StructR\x06config\"\xda\x01\n" +
 	"\x0eInvokeResponse\x12\x16\n" +
 	"\x06handle\x18\x01 \x01(\tR\x06handle\x12\x12\n" +
 	"\x04done\x18\x02 \x01(\bR\x04done\x12\x0e\n" +
 	"\x02ok\x18\x03 \x01(\bR\x02ok\x12\x18\n" +
 	"\amessage\x18\x04 \x01(\tR\amessage\x12/\n" +
-	"\x06detail\x18\x05 \x01(\v2\x17.google.protobuf.StructR\x06detail\"'\n" +
+	"\x06detail\x18\x05 \x01(\v2\x17.google.protobuf.StructR\x06detail\x12'\n" +
+	"\x04then\x18\x06 \x03(\v2\x13.dusk.v1alpha1.NextR\x04then\x12\x18\n" +
+	"\achanged\x18\a \x03(\tR\achanged\"'\n" +
 	"\rStatusRequest\x12\x16\n" +
 	"\x06handle\x18\x01 \x01(\tR\x06handle\"\x7f\n" +
 	"\x0eStatusResponse\x12\x12\n" +
@@ -1328,7 +1891,25 @@ const file_dusk_v1alpha1_plugin_proto_rawDesc = "" +
 	"\x15CONFIG_FIELD_TYPE_INT\x10\x02\x12\x1a\n" +
 	"\x16CONFIG_FIELD_TYPE_BOOL\x10\x03\x12\x1a\n" +
 	"\x16CONFIG_FIELD_TYPE_ENUM\x10\x04\x12\x1e\n" +
-	"\x1aCONFIG_FIELD_TYPE_DURATION\x10\x052\xa8\x04\n" +
+	"\x1aCONFIG_FIELD_TYPE_DURATION\x10\x05*I\n" +
+	"\x06UISlot\x12\x17\n" +
+	"\x13UI_SLOT_UNSPECIFIED\x10\x00\x12\x12\n" +
+	"\x0eUI_SLOT_ENTITY\x10\x01\x12\x12\n" +
+	"\x0eUI_SLOT_PLUGIN\x10\x02*n\n" +
+	"\n" +
+	"ViewLayout\x12\x1b\n" +
+	"\x17VIEW_LAYOUT_UNSPECIFIED\x10\x00\x12\x15\n" +
+	"\x11VIEW_LAYOUT_TABLE\x10\x01\x12\x14\n" +
+	"\x10VIEW_LAYOUT_LIST\x10\x02\x12\x16\n" +
+	"\x12VIEW_LAYOUT_BADGES\x10\x03*\x9d\x01\n" +
+	"\n" +
+	"ViewFormat\x12\x1b\n" +
+	"\x17VIEW_FORMAT_UNSPECIFIED\x10\x00\x12\x14\n" +
+	"\x10VIEW_FORMAT_TEXT\x10\x01\x12\x14\n" +
+	"\x10VIEW_FORMAT_CODE\x10\x02\x12\x15\n" +
+	"\x11VIEW_FORMAT_BADGE\x10\x03\x12\x14\n" +
+	"\x10VIEW_FORMAT_LINK\x10\x04\x12\x19\n" +
+	"\x15VIEW_FORMAT_TIMESTAMP\x10\x052\xa8\x04\n" +
 	"\rPluginService\x12K\n" +
 	"\bDescribe\x12\x1e.dusk.v1alpha1.DescribeRequest\x1a\x1f.dusk.v1alpha1.DescribeResponse\x12]\n" +
 	"\x0eValidateConfig\x12$.dusk.v1alpha1.ValidateConfigRequest\x1a%.dusk.v1alpha1.ValidateConfigResponse\x12G\n" +
@@ -1351,67 +1932,85 @@ func file_dusk_v1alpha1_plugin_proto_rawDescGZIP() []byte {
 	return file_dusk_v1alpha1_plugin_proto_rawDescData
 }
 
-var file_dusk_v1alpha1_plugin_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_dusk_v1alpha1_plugin_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_dusk_v1alpha1_plugin_proto_enumTypes = make([]protoimpl.EnumInfo, 5)
+var file_dusk_v1alpha1_plugin_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
 var file_dusk_v1alpha1_plugin_proto_goTypes = []any{
 	(ActionClass)(0),               // 0: dusk.v1alpha1.ActionClass
 	(ConfigFieldType)(0),           // 1: dusk.v1alpha1.ConfigFieldType
-	(*ActionDescriptor)(nil),       // 2: dusk.v1alpha1.ActionDescriptor
-	(*ConfigField)(nil),            // 3: dusk.v1alpha1.ConfigField
-	(*DescribeRequest)(nil),        // 4: dusk.v1alpha1.DescribeRequest
-	(*DescribeResponse)(nil),       // 5: dusk.v1alpha1.DescribeResponse
-	(*UIContribution)(nil),         // 6: dusk.v1alpha1.UIContribution
-	(*ValidateConfigRequest)(nil),  // 7: dusk.v1alpha1.ValidateConfigRequest
-	(*ValidateConfigResponse)(nil), // 8: dusk.v1alpha1.ValidateConfigResponse
-	(*IngestRequest)(nil),          // 9: dusk.v1alpha1.IngestRequest
-	(*IngestResponse)(nil),         // 10: dusk.v1alpha1.IngestResponse
-	(*DryRunRequest)(nil),          // 11: dusk.v1alpha1.DryRunRequest
-	(*DryRunResponse)(nil),         // 12: dusk.v1alpha1.DryRunResponse
-	(*InvokeRequest)(nil),          // 13: dusk.v1alpha1.InvokeRequest
-	(*InvokeResponse)(nil),         // 14: dusk.v1alpha1.InvokeResponse
-	(*StatusRequest)(nil),          // 15: dusk.v1alpha1.StatusRequest
-	(*StatusResponse)(nil),         // 16: dusk.v1alpha1.StatusResponse
-	(*GetAssetRequest)(nil),        // 17: dusk.v1alpha1.GetAssetRequest
-	(*GetAssetResponse)(nil),       // 18: dusk.v1alpha1.GetAssetResponse
-	nil,                            // 19: dusk.v1alpha1.ValidateConfigResponse.FieldErrorsEntry
-	(*structpb.Struct)(nil),        // 20: google.protobuf.Struct
-	(*IngestBatch)(nil),            // 21: dusk.v1alpha1.IngestBatch
+	(UISlot)(0),                    // 2: dusk.v1alpha1.UISlot
+	(ViewLayout)(0),                // 3: dusk.v1alpha1.ViewLayout
+	(ViewFormat)(0),                // 4: dusk.v1alpha1.ViewFormat
+	(*ActionDescriptor)(nil),       // 5: dusk.v1alpha1.ActionDescriptor
+	(*Next)(nil),                   // 6: dusk.v1alpha1.Next
+	(*ConfigField)(nil),            // 7: dusk.v1alpha1.ConfigField
+	(*DescribeRequest)(nil),        // 8: dusk.v1alpha1.DescribeRequest
+	(*SourceBudget)(nil),           // 9: dusk.v1alpha1.SourceBudget
+	(*DescribeResponse)(nil),       // 10: dusk.v1alpha1.DescribeResponse
+	(*ViewField)(nil),              // 11: dusk.v1alpha1.ViewField
+	(*ViewSpec)(nil),               // 12: dusk.v1alpha1.ViewSpec
+	(*UIContribution)(nil),         // 13: dusk.v1alpha1.UIContribution
+	(*ValidateConfigRequest)(nil),  // 14: dusk.v1alpha1.ValidateConfigRequest
+	(*ValidateConfigResponse)(nil), // 15: dusk.v1alpha1.ValidateConfigResponse
+	(*IngestRequest)(nil),          // 16: dusk.v1alpha1.IngestRequest
+	(*IngestResponse)(nil),         // 17: dusk.v1alpha1.IngestResponse
+	(*DryRunRequest)(nil),          // 18: dusk.v1alpha1.DryRunRequest
+	(*DryRunResponse)(nil),         // 19: dusk.v1alpha1.DryRunResponse
+	(*InvokeRequest)(nil),          // 20: dusk.v1alpha1.InvokeRequest
+	(*InvokeResponse)(nil),         // 21: dusk.v1alpha1.InvokeResponse
+	(*StatusRequest)(nil),          // 22: dusk.v1alpha1.StatusRequest
+	(*StatusResponse)(nil),         // 23: dusk.v1alpha1.StatusResponse
+	(*GetAssetRequest)(nil),        // 24: dusk.v1alpha1.GetAssetRequest
+	(*GetAssetResponse)(nil),       // 25: dusk.v1alpha1.GetAssetResponse
+	nil,                            // 26: dusk.v1alpha1.ValidateConfigResponse.FieldErrorsEntry
+	(*structpb.Struct)(nil),        // 27: google.protobuf.Struct
+	(*IngestBatch)(nil),            // 28: dusk.v1alpha1.IngestBatch
 }
 var file_dusk_v1alpha1_plugin_proto_depIdxs = []int32{
 	0,  // 0: dusk.v1alpha1.ActionDescriptor.class:type_name -> dusk.v1alpha1.ActionClass
-	20, // 1: dusk.v1alpha1.ActionDescriptor.params_schema:type_name -> google.protobuf.Struct
-	1,  // 2: dusk.v1alpha1.ConfigField.type:type_name -> dusk.v1alpha1.ConfigFieldType
-	2,  // 3: dusk.v1alpha1.DescribeResponse.actions:type_name -> dusk.v1alpha1.ActionDescriptor
-	3,  // 4: dusk.v1alpha1.DescribeResponse.config_fields:type_name -> dusk.v1alpha1.ConfigField
-	6,  // 5: dusk.v1alpha1.DescribeResponse.ui:type_name -> dusk.v1alpha1.UIContribution
-	20, // 6: dusk.v1alpha1.ValidateConfigRequest.config:type_name -> google.protobuf.Struct
-	19, // 7: dusk.v1alpha1.ValidateConfigResponse.field_errors:type_name -> dusk.v1alpha1.ValidateConfigResponse.FieldErrorsEntry
-	20, // 8: dusk.v1alpha1.IngestRequest.config:type_name -> google.protobuf.Struct
-	21, // 9: dusk.v1alpha1.IngestResponse.batch:type_name -> dusk.v1alpha1.IngestBatch
-	20, // 10: dusk.v1alpha1.DryRunRequest.params:type_name -> google.protobuf.Struct
-	20, // 11: dusk.v1alpha1.DryRunResponse.detail:type_name -> google.protobuf.Struct
-	20, // 12: dusk.v1alpha1.InvokeRequest.params:type_name -> google.protobuf.Struct
-	20, // 13: dusk.v1alpha1.InvokeResponse.detail:type_name -> google.protobuf.Struct
-	20, // 14: dusk.v1alpha1.StatusResponse.detail:type_name -> google.protobuf.Struct
-	4,  // 15: dusk.v1alpha1.PluginService.Describe:input_type -> dusk.v1alpha1.DescribeRequest
-	7,  // 16: dusk.v1alpha1.PluginService.ValidateConfig:input_type -> dusk.v1alpha1.ValidateConfigRequest
-	9,  // 17: dusk.v1alpha1.PluginService.Ingest:input_type -> dusk.v1alpha1.IngestRequest
-	11, // 18: dusk.v1alpha1.PluginService.DryRun:input_type -> dusk.v1alpha1.DryRunRequest
-	13, // 19: dusk.v1alpha1.PluginService.Invoke:input_type -> dusk.v1alpha1.InvokeRequest
-	15, // 20: dusk.v1alpha1.PluginService.Status:input_type -> dusk.v1alpha1.StatusRequest
-	17, // 21: dusk.v1alpha1.PluginService.GetAsset:input_type -> dusk.v1alpha1.GetAssetRequest
-	5,  // 22: dusk.v1alpha1.PluginService.Describe:output_type -> dusk.v1alpha1.DescribeResponse
-	8,  // 23: dusk.v1alpha1.PluginService.ValidateConfig:output_type -> dusk.v1alpha1.ValidateConfigResponse
-	10, // 24: dusk.v1alpha1.PluginService.Ingest:output_type -> dusk.v1alpha1.IngestResponse
-	12, // 25: dusk.v1alpha1.PluginService.DryRun:output_type -> dusk.v1alpha1.DryRunResponse
-	14, // 26: dusk.v1alpha1.PluginService.Invoke:output_type -> dusk.v1alpha1.InvokeResponse
-	16, // 27: dusk.v1alpha1.PluginService.Status:output_type -> dusk.v1alpha1.StatusResponse
-	18, // 28: dusk.v1alpha1.PluginService.GetAsset:output_type -> dusk.v1alpha1.GetAssetResponse
-	22, // [22:29] is the sub-list for method output_type
-	15, // [15:22] is the sub-list for method input_type
-	15, // [15:15] is the sub-list for extension type_name
-	15, // [15:15] is the sub-list for extension extendee
-	0,  // [0:15] is the sub-list for field type_name
+	27, // 1: dusk.v1alpha1.ActionDescriptor.params_schema:type_name -> google.protobuf.Struct
+	6,  // 2: dusk.v1alpha1.ActionDescriptor.then:type_name -> dusk.v1alpha1.Next
+	27, // 3: dusk.v1alpha1.Next.params:type_name -> google.protobuf.Struct
+	1,  // 4: dusk.v1alpha1.ConfigField.type:type_name -> dusk.v1alpha1.ConfigFieldType
+	5,  // 5: dusk.v1alpha1.DescribeResponse.actions:type_name -> dusk.v1alpha1.ActionDescriptor
+	7,  // 6: dusk.v1alpha1.DescribeResponse.config_fields:type_name -> dusk.v1alpha1.ConfigField
+	13, // 7: dusk.v1alpha1.DescribeResponse.ui:type_name -> dusk.v1alpha1.UIContribution
+	9,  // 8: dusk.v1alpha1.DescribeResponse.budget:type_name -> dusk.v1alpha1.SourceBudget
+	4,  // 9: dusk.v1alpha1.ViewField.format:type_name -> dusk.v1alpha1.ViewFormat
+	3,  // 10: dusk.v1alpha1.ViewSpec.layout:type_name -> dusk.v1alpha1.ViewLayout
+	11, // 11: dusk.v1alpha1.ViewSpec.fields:type_name -> dusk.v1alpha1.ViewField
+	2,  // 12: dusk.v1alpha1.UIContribution.slot:type_name -> dusk.v1alpha1.UISlot
+	12, // 13: dusk.v1alpha1.UIContribution.spec:type_name -> dusk.v1alpha1.ViewSpec
+	27, // 14: dusk.v1alpha1.ValidateConfigRequest.config:type_name -> google.protobuf.Struct
+	26, // 15: dusk.v1alpha1.ValidateConfigResponse.field_errors:type_name -> dusk.v1alpha1.ValidateConfigResponse.FieldErrorsEntry
+	27, // 16: dusk.v1alpha1.IngestRequest.config:type_name -> google.protobuf.Struct
+	28, // 17: dusk.v1alpha1.IngestResponse.batch:type_name -> dusk.v1alpha1.IngestBatch
+	27, // 18: dusk.v1alpha1.DryRunRequest.params:type_name -> google.protobuf.Struct
+	27, // 19: dusk.v1alpha1.DryRunRequest.config:type_name -> google.protobuf.Struct
+	27, // 20: dusk.v1alpha1.DryRunResponse.detail:type_name -> google.protobuf.Struct
+	27, // 21: dusk.v1alpha1.InvokeRequest.params:type_name -> google.protobuf.Struct
+	27, // 22: dusk.v1alpha1.InvokeRequest.config:type_name -> google.protobuf.Struct
+	27, // 23: dusk.v1alpha1.InvokeResponse.detail:type_name -> google.protobuf.Struct
+	6,  // 24: dusk.v1alpha1.InvokeResponse.then:type_name -> dusk.v1alpha1.Next
+	27, // 25: dusk.v1alpha1.StatusResponse.detail:type_name -> google.protobuf.Struct
+	8,  // 26: dusk.v1alpha1.PluginService.Describe:input_type -> dusk.v1alpha1.DescribeRequest
+	14, // 27: dusk.v1alpha1.PluginService.ValidateConfig:input_type -> dusk.v1alpha1.ValidateConfigRequest
+	16, // 28: dusk.v1alpha1.PluginService.Ingest:input_type -> dusk.v1alpha1.IngestRequest
+	18, // 29: dusk.v1alpha1.PluginService.DryRun:input_type -> dusk.v1alpha1.DryRunRequest
+	20, // 30: dusk.v1alpha1.PluginService.Invoke:input_type -> dusk.v1alpha1.InvokeRequest
+	22, // 31: dusk.v1alpha1.PluginService.Status:input_type -> dusk.v1alpha1.StatusRequest
+	24, // 32: dusk.v1alpha1.PluginService.GetAsset:input_type -> dusk.v1alpha1.GetAssetRequest
+	10, // 33: dusk.v1alpha1.PluginService.Describe:output_type -> dusk.v1alpha1.DescribeResponse
+	15, // 34: dusk.v1alpha1.PluginService.ValidateConfig:output_type -> dusk.v1alpha1.ValidateConfigResponse
+	17, // 35: dusk.v1alpha1.PluginService.Ingest:output_type -> dusk.v1alpha1.IngestResponse
+	19, // 36: dusk.v1alpha1.PluginService.DryRun:output_type -> dusk.v1alpha1.DryRunResponse
+	21, // 37: dusk.v1alpha1.PluginService.Invoke:output_type -> dusk.v1alpha1.InvokeResponse
+	23, // 38: dusk.v1alpha1.PluginService.Status:output_type -> dusk.v1alpha1.StatusResponse
+	25, // 39: dusk.v1alpha1.PluginService.GetAsset:output_type -> dusk.v1alpha1.GetAssetResponse
+	33, // [33:40] is the sub-list for method output_type
+	26, // [26:33] is the sub-list for method input_type
+	26, // [26:26] is the sub-list for extension type_name
+	26, // [26:26] is the sub-list for extension extendee
+	0,  // [0:26] is the sub-list for field type_name
 }
 
 func init() { file_dusk_v1alpha1_plugin_proto_init() }
@@ -1425,8 +2024,8 @@ func file_dusk_v1alpha1_plugin_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_dusk_v1alpha1_plugin_proto_rawDesc), len(file_dusk_v1alpha1_plugin_proto_rawDesc)),
-			NumEnums:      2,
-			NumMessages:   18,
+			NumEnums:      5,
+			NumMessages:   22,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

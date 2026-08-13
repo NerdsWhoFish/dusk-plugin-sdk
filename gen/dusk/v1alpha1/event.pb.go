@@ -94,12 +94,20 @@ type Event struct {
 	Ref    string                 `protobuf:"bytes,2,opt,name=ref,proto3" json:"ref,omitempty"`
 	Action string                 `protobuf:"bytes,3,opt,name=action,proto3" json:"action,omitempty"`
 	// Agent session id, or a user identity.
-	Actor         string                 `protobuf:"bytes,4,opt,name=actor,proto3" json:"actor,omitempty"`
-	Status        EventStatus            `protobuf:"varint,5,opt,name=status,proto3,enum=dusk.v1alpha1.EventStatus" json:"status,omitempty"`
-	StartedAt     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=started_at,json=startedAt,proto3" json:"started_at,omitempty"`
-	FinishedAt    *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=finished_at,json=finishedAt,proto3" json:"finished_at,omitempty"`
-	Message       string                 `protobuf:"bytes,8,opt,name=message,proto3" json:"message,omitempty"`
-	Detail        *structpb.Struct       `protobuf:"bytes,9,opt,name=detail,proto3" json:"detail,omitempty"`
+	Actor      string                 `protobuf:"bytes,4,opt,name=actor,proto3" json:"actor,omitempty"`
+	Status     EventStatus            `protobuf:"varint,5,opt,name=status,proto3,enum=dusk.v1alpha1.EventStatus" json:"status,omitempty"`
+	StartedAt  *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=started_at,json=startedAt,proto3" json:"started_at,omitempty"`
+	FinishedAt *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=finished_at,json=finishedAt,proto3" json:"finished_at,omitempty"`
+	Message    string                 `protobuf:"bytes,8,opt,name=message,proto3" json:"message,omitempty"`
+	Detail     *structpb.Struct       `protobuf:"bytes,9,opt,name=detail,proto3" json:"detail,omitempty"`
+	// Chain ties every invocation in one composition together, so what actually
+	// ran is answerable afterwards rather than being several unrelated records
+	// that happen to be adjacent in time.
+	Chain string `protobuf:"bytes,10,opt,name=chain,proto3" json:"chain,omitempty"`
+	// Plugin is which plugin served the invocation. The ref names what was acted
+	// on; this names what did the acting, and a plugin-scoped action has no ref
+	// to infer it from.
+	Plugin        string `protobuf:"bytes,11,opt,name=plugin,proto3" json:"plugin,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -197,11 +205,25 @@ func (x *Event) GetDetail() *structpb.Struct {
 	return nil
 }
 
+func (x *Event) GetChain() string {
+	if x != nil {
+		return x.Chain
+	}
+	return ""
+}
+
+func (x *Event) GetPlugin() string {
+	if x != nil {
+		return x.Plugin
+	}
+	return ""
+}
+
 var File_dusk_v1alpha1_event_proto protoreflect.FileDescriptor
 
 const file_dusk_v1alpha1_event_proto_rawDesc = "" +
 	"\n" +
-	"\x19dusk/v1alpha1/event.proto\x12\rdusk.v1alpha1\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xce\x02\n" +
+	"\x19dusk/v1alpha1/event.proto\x12\rdusk.v1alpha1\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xfc\x02\n" +
 	"\x05Event\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x10\n" +
 	"\x03ref\x18\x02 \x01(\tR\x03ref\x12\x16\n" +
@@ -213,7 +235,10 @@ const file_dusk_v1alpha1_event_proto_rawDesc = "" +
 	"\vfinished_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\n" +
 	"finishedAt\x12\x18\n" +
 	"\amessage\x18\b \x01(\tR\amessage\x12/\n" +
-	"\x06detail\x18\t \x01(\v2\x17.google.protobuf.StructR\x06detail*\x93\x01\n" +
+	"\x06detail\x18\t \x01(\v2\x17.google.protobuf.StructR\x06detail\x12\x14\n" +
+	"\x05chain\x18\n" +
+	" \x01(\tR\x05chain\x12\x16\n" +
+	"\x06plugin\x18\v \x01(\tR\x06plugin*\x93\x01\n" +
 	"\vEventStatus\x12\x1c\n" +
 	"\x18EVENT_STATUS_UNSPECIFIED\x10\x00\x12\x18\n" +
 	"\x14EVENT_STATUS_STARTED\x10\x01\x12\x1a\n" +

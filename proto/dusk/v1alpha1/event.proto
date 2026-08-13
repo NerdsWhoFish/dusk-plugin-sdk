@@ -38,4 +38,14 @@ message Event {
   google.protobuf.Timestamp finished_at = 7;
   string message = 8;
   google.protobuf.Struct detail = 9;
+
+  // Chain ties every invocation in one composition together, so what actually
+  // ran is answerable afterwards rather than being several unrelated records
+  // that happen to be adjacent in time.
+  string chain = 10;
+
+  // Plugin is which plugin served the invocation. The ref names what was acted
+  // on; this names what did the acting, and a plugin-scoped action has no ref
+  // to infer it from.
+  string plugin = 11;
 }
