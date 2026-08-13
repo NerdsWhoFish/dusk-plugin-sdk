@@ -293,8 +293,12 @@ type Note struct {
 	Pinned bool `protobuf:"varint,5,opt,name=pinned,proto3" json:"pinned,omitempty"`
 	// Set by Dusk. Identical content on the same entity returns the existing
 	// note rather than creating a duplicate.
-	ContentHash   string      `protobuf:"bytes,6,opt,name=content_hash,json=contentHash,proto3" json:"content_hash,omitempty"`
-	Provenance    *Provenance `protobuf:"bytes,7,opt,name=provenance,proto3" json:"provenance,omitempty"`
+	ContentHash string      `protobuf:"bytes,6,opt,name=content_hash,json=contentHash,proto3" json:"content_hash,omitempty"`
+	Provenance  *Provenance `protobuf:"bytes,7,opt,name=provenance,proto3" json:"provenance,omitempty"`
+	// Status is how a note that is work rather than knowledge gets closed:
+	// "open", "done" or "dropped", with empty meaning open. A gotcha is never
+	// done, so this is only meaningful for the kinds that are a thing to do.
+	Status        string `protobuf:"bytes,8,opt,name=status,proto3" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -376,6 +380,13 @@ func (x *Note) GetProvenance() *Provenance {
 		return x.Provenance
 	}
 	return nil
+}
+
+func (x *Note) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
 }
 
 // Observation is the status facet: what a plugin actually saw.
@@ -564,7 +575,7 @@ const file_dusk_v1alpha1_entity_proto_rawDesc = "" +
 	"attributes\x129\n" +
 	"\n" +
 	"provenance\x18\x05 \x01(\v2\x19.dusk.v1alpha1.ProvenanceR\n" +
-	"provenance\"\xc8\x01\n" +
+	"provenance\"\xe0\x01\n" +
 	"\x04Note\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04refs\x18\x02 \x03(\tR\x04refs\x12\x12\n" +
@@ -574,7 +585,8 @@ const file_dusk_v1alpha1_entity_proto_rawDesc = "" +
 	"\fcontent_hash\x18\x06 \x01(\tR\vcontentHash\x129\n" +
 	"\n" +
 	"provenance\x18\a \x01(\v2\x19.dusk.v1alpha1.ProvenanceR\n" +
-	"provenance\"\x8d\x01\n" +
+	"provenance\x12\x16\n" +
+	"\x06status\x18\b \x01(\tR\x06status\"\x8d\x01\n" +
 	"\vObservation\x12\x10\n" +
 	"\x03ref\x18\x01 \x01(\tR\x03ref\x121\n" +
 	"\apayload\x18\x02 \x01(\v2\x17.google.protobuf.StructR\apayload\x129\n" +

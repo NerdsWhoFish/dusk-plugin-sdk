@@ -79,6 +79,11 @@ message Note {
   string content_hash = 6;
 
   Provenance provenance = 7;
+
+  // Status is how a note that is work rather than knowledge gets closed:
+  // "open", "done" or "dropped", with empty meaning open. A gotcha is never
+  // done, so this is only meaningful for the kinds that are a thing to do.
+  string status = 8;
 }
 
 // Observation is the status facet: what a plugin actually saw.
