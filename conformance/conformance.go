@@ -44,9 +44,9 @@ func (r Result) Error() string {
 	return strings.Join(parts, "\n")
 }
 
-// ValidateBatch parses protojson emitted by a Tier 1 ingester and checks it
-// against the contract. Malformed JSON yields a Result with a single violation
-// rather than a separate error path, so callers have one thing to inspect.
+// ValidateBatch parses a batch as protojson and checks it against the contract.
+// Malformed JSON yields a Result with a single violation rather than a separate
+// error path, so callers have one thing to inspect.
 func ValidateBatch(data []byte) Result {
 	batch := &duskv1alpha1.IngestBatch{}
 	if err := protojson.Unmarshal(data, batch); err != nil {

@@ -10,7 +10,7 @@ import (
 	duskv1alpha1 "github.com/NerdsWhoFish/dusk-plugin-sdk/gen/dusk/v1alpha1"
 )
 
-// validEntityBatch is the shape a correct Tier 1 ingester emits.
+// validEntityBatch is the shape a correct batch has on the wire.
 const validEntityBatch = `{
   "schemaVersion": "v1alpha1",
   "entities": [{
@@ -141,9 +141,10 @@ func TestADR0011_PartialFlagSurvivesRoundTrip(t *testing.T) {
 	}
 }
 
-// The README promises a shell script is enough. If its output stops
-// validating, that promise is false.
-func TestADR0002_ShellPluginOutputIsAccepted(t *testing.T) {
+// The README shows a batch as protojson, which is what a plugin in any
+// language builds. If the documented shape stops validating, the example is a
+// lie, and it is the first thing an author copies.
+func TestTheDocumentedBatchValidates(t *testing.T) {
 	const jqOutput = `{
   "schema_version": "v1alpha1",
   "entities": [
@@ -173,9 +174,9 @@ func TestADR0002_ShellPluginOutputIsAccepted(t *testing.T) {
 	}
 }
 
-// TestADR0007_ProtojsonAcceptsBothFieldNamings guards the Tier 1 contract:
-// hand-written and jq-generated JSON use snake_case, while protojson emits
-// lowerCamelCase. Both must be accepted or shell plugins break.
+// TestADR0007_ProtojsonAcceptsBothFieldNamings: hand-written JSON uses
+// snake_case and protojson emits lowerCamelCase. Both must be accepted, or a
+// plugin outside Go that builds its batch by hand breaks on field naming.
 func TestADR0007_ProtojsonAcceptsBothFieldNamings(t *testing.T) {
 	tests := []struct {
 		name string

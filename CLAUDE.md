@@ -26,10 +26,11 @@ Treat every proto change as breaking until proven otherwise.
 
 ## Non-negotiables
 
-- **`ActionClass` is a closed enum; `kind` and relation `type` are not.** Closed where the meaning must be identical everywhere, open where the taxonomy must grow without a release.
+- **`ActionClass`, `ConfigFieldType`, `UISlot`, `ViewLayout` and `ViewFormat` are closed enums; `kind` and relation `type` are not.** Closed where Dusk renders or decides from the value, so an unknown one has no behaviour. Open where the taxonomy must grow without a release.
 - **`partial` must survive the wire.** It is how a plugin says "I could not fully look", and losing it makes Dusk delete real entities on a transient failure.
-- **Both field namings must parse.** Shell scripts write `schema_version`, protojson emits `schemaVersion`. Breaking either breaks Tier 1 for everyone hand-writing JSON.
-- **The README example is a test.** It promises a shell script is enough; if its output stops validating, that promise is false.
+- **Both field namings must parse.** Hand-written JSON uses `schema_version`, protojson emits `schemaVersion`. Breaking either breaks every plugin outside Go that builds a batch by hand.
+- **The documented batch is a test.** It is the first thing an author copies, so if it stops validating the example is a lie.
+- **A sensitive config field is a field, not an annotation.** `conformance` can enforce a field; it cannot enforce something an author forgot to write.
 - **No cgo.** `make nocgo` enforces it.
 
 ## Working here
