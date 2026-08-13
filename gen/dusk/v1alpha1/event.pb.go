@@ -31,6 +31,9 @@ const (
 	EventStatus_EVENT_STATUS_SUCCEEDED   EventStatus = 2
 	EventStatus_EVENT_STATUS_FAILED      EventStatus = 3
 	EventStatus_EVENT_STATUS_DENIED      EventStatus = 4
+	// Waiting on a human to answer a question the plugin asked. The action has
+	// not run, and may never: nothing obliges anybody to answer.
+	EventStatus_EVENT_STATUS_WAITING EventStatus = 5
 )
 
 // Enum value maps for EventStatus.
@@ -41,6 +44,7 @@ var (
 		2: "EVENT_STATUS_SUCCEEDED",
 		3: "EVENT_STATUS_FAILED",
 		4: "EVENT_STATUS_DENIED",
+		5: "EVENT_STATUS_WAITING",
 	}
 	EventStatus_value = map[string]int32{
 		"EVENT_STATUS_UNSPECIFIED": 0,
@@ -48,6 +52,7 @@ var (
 		"EVENT_STATUS_SUCCEEDED":   2,
 		"EVENT_STATUS_FAILED":      3,
 		"EVENT_STATUS_DENIED":      4,
+		"EVENT_STATUS_WAITING":     5,
 	}
 )
 
@@ -238,13 +243,14 @@ const file_dusk_v1alpha1_event_proto_rawDesc = "" +
 	"\x06detail\x18\t \x01(\v2\x17.google.protobuf.StructR\x06detail\x12\x14\n" +
 	"\x05chain\x18\n" +
 	" \x01(\tR\x05chain\x12\x16\n" +
-	"\x06plugin\x18\v \x01(\tR\x06plugin*\x93\x01\n" +
+	"\x06plugin\x18\v \x01(\tR\x06plugin*\xad\x01\n" +
 	"\vEventStatus\x12\x1c\n" +
 	"\x18EVENT_STATUS_UNSPECIFIED\x10\x00\x12\x18\n" +
 	"\x14EVENT_STATUS_STARTED\x10\x01\x12\x1a\n" +
 	"\x16EVENT_STATUS_SUCCEEDED\x10\x02\x12\x17\n" +
 	"\x13EVENT_STATUS_FAILED\x10\x03\x12\x17\n" +
-	"\x13EVENT_STATUS_DENIED\x10\x04B\xbc\x01\n" +
+	"\x13EVENT_STATUS_DENIED\x10\x04\x12\x18\n" +
+	"\x14EVENT_STATUS_WAITING\x10\x05B\xbc\x01\n" +
 	"\x11com.dusk.v1alpha1B\n" +
 	"EventProtoP\x01ZFgithub.com/NerdsWhoFish/dusk-plugin-sdk/gen/dusk/v1alpha1;duskv1alpha1\xa2\x02\x03DXX\xaa\x02\rDusk.V1alpha1\xca\x02\rDusk\\V1alpha1\xe2\x02\x19Dusk\\V1alpha1\\GPBMetadata\xea\x02\x0eDusk::V1alpha1b\x06proto3"
 

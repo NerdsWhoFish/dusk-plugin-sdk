@@ -13,6 +13,10 @@ enum EventStatus {
   EVENT_STATUS_SUCCEEDED = 2;
   EVENT_STATUS_FAILED = 3;
   EVENT_STATUS_DENIED = 4;
+
+  // Waiting on a human to answer a question the plugin asked. The action has
+  // not run, and may never: nothing obliges anybody to answer.
+  EVENT_STATUS_WAITING = 5;
 }
 
 // Event records an action invocation.
