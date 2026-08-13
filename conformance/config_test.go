@@ -3,8 +3,8 @@ package conformance_test
 import (
 	"testing"
 
-	"github.com/FetchHQ/dusk-plugin-sdk/conformance"
-	duskv1alpha1 "github.com/FetchHQ/dusk-plugin-sdk/gen/dusk/v1alpha1"
+	"github.com/NerdsWhoFish/dusk-plugin-sdk/conformance"
+	duskv1alpha1 "github.com/NerdsWhoFish/dusk-plugin-sdk/gen/dusk/v1alpha1"
 )
 
 func field(mut ...func(*duskv1alpha1.ConfigField)) *duskv1alpha1.ConfigField {

@@ -587,8 +587,8 @@ const file_dusk_v1alpha1_entity_proto_rawDesc = "" +
 	"\trelations\x18\x03 \x03(\v2\x17.dusk.v1alpha1.RelationR\trelations\x12)\n" +
 	"\x05notes\x18\x04 \x03(\v2\x13.dusk.v1alpha1.NoteR\x05notes\x12>\n" +
 	"\fobservations\x18\x05 \x03(\v2\x1a.dusk.v1alpha1.ObservationR\fobservations\x12\x18\n" +
-	"\apartial\x18\x06 \x01(\bR\apartialB\xb8\x01\n" +
-	"\x11com.dusk.v1alpha1B\vEntityProtoP\x01ZAgithub.com/FetchHQ/dusk-plugin-sdk/gen/dusk/v1alpha1;duskv1alpha1\xa2\x02\x03DXX\xaa\x02\rDusk.V1alpha1\xca\x02\rDusk\\V1alpha1\xe2\x02\x19Dusk\\V1alpha1\\GPBMetadata\xea\x02\x0eDusk::V1alpha1b\x06proto3"
+	"\apartial\x18\x06 \x01(\bR\apartialB\xbd\x01\n" +
+	"\x11com.dusk.v1alpha1B\vEntityProtoP\x01ZFgithub.com/NerdsWhoFish/dusk-plugin-sdk/gen/dusk/v1alpha1;duskv1alpha1\xa2\x02\x03DXX\xaa\x02\rDusk.V1alpha1\xca\x02\rDusk\\V1alpha1\xe2\x02\x19Dusk\\V1alpha1\\GPBMetadata\xea\x02\x0eDusk::V1alpha1b\x06proto3"
 
 var (
 	file_dusk_v1alpha1_entity_proto_rawDescOnce sync.Once

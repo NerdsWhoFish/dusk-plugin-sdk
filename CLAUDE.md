@@ -1,17 +1,17 @@
 # dusk-plugin-sdk
 
-The plugin contract for [Dusk](https://github.com/FetchHQ/dusk).
+The plugin contract for [Dusk](https://github.com/NerdsWhoFish/dusk).
 **The `.proto` is the contract**; the Go SDK is a convenience layer on top of it.
 
 ## Before you change anything
 
 The decisions governing this repo live in the Dusk repo, not here:
 
-- [ADR-0002](https://github.com/FetchHQ/dusk/blob/main/adr/0002-plugin-protocol.md): why subprocesses, why two transports, why not `hashicorp/go-plugin`
-- [ADR-0007](https://github.com/FetchHQ/dusk/blob/main/adr/0007-entity-schema.md): why kinds are open strings and why there is an attributes escape hatch
-- [ADR-0015](https://github.com/FetchHQ/dusk/blob/main/adr/0015-plugin-actions-and-events.md): actions, classification, and why events are not notes
-- [ADR-0016](https://github.com/FetchHQ/dusk/blob/main/adr/0016-plugin-sdk-repo.md): why this repo is separate
-- [ADR-0017](https://github.com/FetchHQ/dusk/blob/main/adr/0017-engineering-policy.md): the engineering policy, including testing and the cgo rule
+- [ADR-0002](https://github.com/NerdsWhoFish/dusk/blob/main/adr/0002-plugin-protocol.md): why subprocesses, why two transports, why not `hashicorp/go-plugin`
+- [ADR-0007](https://github.com/NerdsWhoFish/dusk/blob/main/adr/0007-entity-schema.md): why kinds are open strings and why there is an attributes escape hatch
+- [ADR-0015](https://github.com/NerdsWhoFish/dusk/blob/main/adr/0015-plugin-actions-and-events.md): actions, classification, and why events are not notes
+- [ADR-0016](https://github.com/NerdsWhoFish/dusk/blob/main/adr/0016-plugin-sdk-repo.md): why this repo is separate
+- [ADR-0017](https://github.com/NerdsWhoFish/dusk/blob/main/adr/0017-engineering-policy.md): the engineering policy, including testing and the cgo rule
 
 New decisions about the contract are recorded as ADRs **in the Dusk repo**, and its `adr/README.md` index is updated in the same change.
 

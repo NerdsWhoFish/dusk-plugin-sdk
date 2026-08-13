@@ -1149,8 +1149,8 @@ const file_dusk_v1alpha1_plugin_proto_rawDesc = "" +
 	"\x06Ingest\x12\x1c.dusk.v1alpha1.IngestRequest\x1a\x1d.dusk.v1alpha1.IngestResponse0\x01\x12E\n" +
 	"\x06DryRun\x12\x1c.dusk.v1alpha1.DryRunRequest\x1a\x1d.dusk.v1alpha1.DryRunResponse\x12E\n" +
 	"\x06Invoke\x12\x1c.dusk.v1alpha1.InvokeRequest\x1a\x1d.dusk.v1alpha1.InvokeResponse\x12E\n" +
-	"\x06Status\x12\x1c.dusk.v1alpha1.StatusRequest\x1a\x1d.dusk.v1alpha1.StatusResponseB\xb8\x01\n" +
-	"\x11com.dusk.v1alpha1B\vPluginProtoP\x01ZAgithub.com/FetchHQ/dusk-plugin-sdk/gen/dusk/v1alpha1;duskv1alpha1\xa2\x02\x03DXX\xaa\x02\rDusk.V1alpha1\xca\x02\rDusk\\V1alpha1\xe2\x02\x19Dusk\\V1alpha1\\GPBMetadata\xea\x02\x0eDusk::V1alpha1b\x06proto3"
+	"\x06Status\x12\x1c.dusk.v1alpha1.StatusRequest\x1a\x1d.dusk.v1alpha1.StatusResponseB\xbd\x01\n" +
+	"\x11com.dusk.v1alpha1B\vPluginProtoP\x01ZFgithub.com/NerdsWhoFish/dusk-plugin-sdk/gen/dusk/v1alpha1;duskv1alpha1\xa2\x02\x03DXX\xaa\x02\rDusk.V1alpha1\xca\x02\rDusk\\V1alpha1\xe2\x02\x19Dusk\\V1alpha1\\GPBMetadata\xea\x02\x0eDusk::V1alpha1b\x06proto3"
 
 var (
 	file_dusk_v1alpha1_plugin_proto_rawDescOnce sync.Once

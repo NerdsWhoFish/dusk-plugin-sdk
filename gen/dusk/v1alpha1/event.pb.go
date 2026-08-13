@@ -219,9 +219,9 @@ const file_dusk_v1alpha1_event_proto_rawDesc = "" +
 	"\x14EVENT_STATUS_STARTED\x10\x01\x12\x1a\n" +
 	"\x16EVENT_STATUS_SUCCEEDED\x10\x02\x12\x17\n" +
 	"\x13EVENT_STATUS_FAILED\x10\x03\x12\x17\n" +
-	"\x13EVENT_STATUS_DENIED\x10\x04B\xb7\x01\n" +
+	"\x13EVENT_STATUS_DENIED\x10\x04B\xbc\x01\n" +
 	"\x11com.dusk.v1alpha1B\n" +
-	"EventProtoP\x01ZAgithub.com/FetchHQ/dusk-plugin-sdk/gen/dusk/v1alpha1;duskv1alpha1\xa2\x02\x03DXX\xaa\x02\rDusk.V1alpha1\xca\x02\rDusk\\V1alpha1\xe2\x02\x19Dusk\\V1alpha1\\GPBMetadata\xea\x02\x0eDusk::V1alpha1b\x06proto3"
+	"EventProtoP\x01ZFgithub.com/NerdsWhoFish/dusk-plugin-sdk/gen/dusk/v1alpha1;duskv1alpha1\xa2\x02\x03DXX\xaa\x02\rDusk.V1alpha1\xca\x02\rDusk\\V1alpha1\xe2\x02\x19Dusk\\V1alpha1\\GPBMetadata\xea\x02\x0eDusk::V1alpha1b\x06proto3"
 
 var (
 	file_dusk_v1alpha1_event_proto_rawDescOnce sync.Once

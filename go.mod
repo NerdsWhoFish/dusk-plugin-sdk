@@ -1,4 +1,4 @@
-module github.com/FetchHQ/dusk-plugin-sdk
+module github.com/NerdsWhoFish/dusk-plugin-sdk
 
 go 1.26.5
 

@@ -5,7 +5,7 @@ package dusk.v1alpha1;
 import "dusk/v1alpha1/entity.proto";
 import "google/protobuf/struct.proto";
 
-option go_package = "github.com/FetchHQ/dusk-plugin-sdk/gen/dusk/v1alpha1;duskv1alpha1";
+option go_package = "github.com/NerdsWhoFish/dusk-plugin-sdk/gen/dusk/v1alpha1;duskv1alpha1";
 
 // ActionClass is a closed enum on purpose, unlike Entity.kind. It is semantic
 // rather than taxonomic: it drives safety defaults, so its values must mean

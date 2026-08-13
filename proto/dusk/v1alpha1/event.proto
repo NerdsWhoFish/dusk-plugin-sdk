@@ -5,7 +5,7 @@ package dusk.v1alpha1;
 import "google/protobuf/struct.proto";
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/FetchHQ/dusk-plugin-sdk/gen/dusk/v1alpha1;duskv1alpha1";
+option go_package = "github.com/NerdsWhoFish/dusk-plugin-sdk/gen/dusk/v1alpha1;duskv1alpha1";
 
 enum EventStatus {
   EVENT_STATUS_UNSPECIFIED = 0;

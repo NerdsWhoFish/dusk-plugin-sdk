@@ -1,6 +1,6 @@
 # dusk-plugin-sdk
 
-The plugin contract for [Dusk](https://github.com/FetchHQ/dusk).
+The plugin contract for [Dusk](https://github.com/NerdsWhoFish/dusk).
 
 **The `.proto` is the contract.** The Go SDK is a convenience layer on top of it.
 If you are writing a plugin in Python, Rust, TypeScript, or a shell script, you need only `proto/`.
@@ -74,10 +74,10 @@ make breaking   # check this branch against main
 
 The reasoning behind this contract lives in the Dusk repo:
 
-- [ADR-0002](https://github.com/FetchHQ/dusk/blob/main/adr/0002-plugin-protocol.md): why subprocesses, why two transports, why not `hashicorp/go-plugin`
-- [ADR-0007](https://github.com/FetchHQ/dusk/blob/main/adr/0007-entity-schema.md): why open kinds and an attributes escape hatch
-- [ADR-0015](https://github.com/FetchHQ/dusk/blob/main/adr/0015-plugin-actions-and-events.md): actions, classification, and why events are not notes
-- [ADR-0016](https://github.com/FetchHQ/dusk/blob/main/adr/0016-plugin-sdk-repo.md): why this repo is separate
+- [ADR-0002](https://github.com/NerdsWhoFish/dusk/blob/main/adr/0002-plugin-protocol.md): why subprocesses, why two transports, why not `hashicorp/go-plugin`
+- [ADR-0007](https://github.com/NerdsWhoFish/dusk/blob/main/adr/0007-entity-schema.md): why open kinds and an attributes escape hatch
+- [ADR-0015](https://github.com/NerdsWhoFish/dusk/blob/main/adr/0015-plugin-actions-and-events.md): actions, classification, and why events are not notes
+- [ADR-0016](https://github.com/NerdsWhoFish/dusk/blob/main/adr/0016-plugin-sdk-repo.md): why this repo is separate
 
 ## License
 

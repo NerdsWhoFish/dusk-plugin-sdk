@@ -6,8 +6,8 @@ import (
 
 	"google.golang.org/protobuf/encoding/protojson"
 
-	"github.com/FetchHQ/dusk-plugin-sdk/conformance"
-	duskv1alpha1 "github.com/FetchHQ/dusk-plugin-sdk/gen/dusk/v1alpha1"
+	"github.com/NerdsWhoFish/dusk-plugin-sdk/conformance"
+	duskv1alpha1 "github.com/NerdsWhoFish/dusk-plugin-sdk/gen/dusk/v1alpha1"
 )
 
 // validEntityBatch is the shape a correct Tier 1 ingester emits.

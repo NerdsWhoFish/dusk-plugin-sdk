@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"regexp"
 
-	duskv1alpha1 "github.com/FetchHQ/dusk-plugin-sdk/gen/dusk/v1alpha1"
+	duskv1alpha1 "github.com/NerdsWhoFish/dusk-plugin-sdk/gen/dusk/v1alpha1"
 )
 
 var fieldNamePattern = regexp.MustCompile(`^[a-z][a-z0-9_]*$`)
