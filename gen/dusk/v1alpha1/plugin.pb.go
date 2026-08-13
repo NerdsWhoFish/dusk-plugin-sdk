@@ -1556,8 +1556,11 @@ type Elicited struct {
 	Token string `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
 	// Values are the fields the person supplied, empty unless accepted.
 	Values *structpb.Struct `protobuf:"bytes,2,opt,name=values,proto3" json:"values,omitempty"`
-	// Outcome is accept, decline or cancel. Declining is a considered no and
-	// cancelling is walking away, and a plugin may care which.
+	// Outcome is accept, decline, cancel, or unsupported when there was nobody
+	// to ask. Declining is a considered no and cancelling is walking away.
+	//
+	// Handle unsupported. A scheduled run and a chained step always get it, so a
+	// plugin that treats it as a refusal can never act on either.
 	Outcome       string `protobuf:"bytes,3,opt,name=outcome,proto3" json:"outcome,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
