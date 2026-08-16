@@ -169,14 +169,33 @@ func validateUI(path string, ui *duskv1alpha1.UIContribution) []Violation {
 		v = append(v, Violation{path + ".title", "required, it labels the block the view is rendered in"})
 	}
 
-	// A plugin's own page is not about any one entity, so a kind list there
-	// filters against something that will never be present.
-	if ui.GetSlot() == duskv1alpha1.UISlot_UI_SLOT_PLUGIN && len(ui.GetAppliesToKinds()) > 0 {
-		v = append(v, Violation{path + ".applies_to_kinds", "the plugin slot mounts no entity, so it cannot be limited by kind"})
-	}
+	v = append(v, validatePluginSlot(path, ui, declaredView)...)
 
 	if declaredView {
 		v = append(v, validateViewSpec(path+".spec", ui.GetSpec())...)
+	}
+	return v
+}
+
+// validatePluginSlot reports what a contribution may not do on the plugin's own
+// page, which mounts no entity and supplies no result set.
+func validatePluginSlot(path string, ui *duskv1alpha1.UIContribution, declaredView bool) []Violation {
+	if ui.GetSlot() != duskv1alpha1.UISlot_UI_SLOT_PLUGIN {
+		return nil
+	}
+
+	var v []Violation
+
+	// The page is not about any one entity, so a kind list there filters
+	// against something that will never be present.
+	if len(ui.GetAppliesToKinds()) > 0 {
+		v = append(v, Violation{path + ".applies_to_kinds", "the plugin slot mounts no entity, so it cannot be limited by kind"})
+	}
+
+	// A declared view draws a result set and this page supplies none, so it
+	// would render its own empty text for ever (ADR-0064).
+	if declaredView {
+		v = append(v, Violation{path + ".spec", "the plugin slot supplies no entities, so a declared view has nothing to draw: ship an element, or mount it on a page with a `view` block"})
 	}
 	return v
 }

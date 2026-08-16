@@ -135,6 +135,28 @@ func TestValidateDescribe(t *testing.T) {
 			wants: "applies_to_kinds",
 		},
 		{
+			// The plugin's own page supplies no entities, so a declared view
+			// there renders its own empty text for ever. Refusing it here is
+			// what makes that fail in the plugin rather than later in Dusk.
+			name: "a declared view in the plugin slot",
+			mutate: func(_ *testing.T, d *duskv1alpha1.DescribeResponse) {
+				d.Ui[0].Element, d.Ui[0].Asset = "", ""
+				d.Ui[0].Slot = duskv1alpha1.UISlot_UI_SLOT_PLUGIN
+				d.Ui[0].Spec = &duskv1alpha1.ViewSpec{
+					Layout: duskv1alpha1.ViewLayout_VIEW_LAYOUT_TABLE,
+					Fields: []*duskv1alpha1.ViewField{{Source: "ref"}},
+				}
+			},
+			wants: "nothing to draw",
+		},
+		{
+			name: "an element in the plugin slot, which is how one mounts there",
+			mutate: func(_ *testing.T, d *duskv1alpha1.DescribeResponse) {
+				d.Ui[0].Slot = duskv1alpha1.UISlot_UI_SLOT_PLUGIN
+			},
+			accepts: true,
+		},
+		{
 			name:   "a budget keyed on a field nothing declares",
 			mutate: func(_ *testing.T, d *duskv1alpha1.DescribeResponse) { d.Budget.KeyFields = []string{"endpoint"} },
 			wants:  "not a declared config field",

@@ -233,7 +233,8 @@ message UIContribution {
   UISlot slot = 5;
 
   // Spec makes this a declared view. Set it or set element and asset, never
-  // both: two renderings of one contribution is one too many.
+  // both: two renderings of one contribution is one too many. It cannot be set
+  // in the plugin slot, which supplies no entities to draw (ADR-0064).
   ViewSpec spec = 6;
 }
 

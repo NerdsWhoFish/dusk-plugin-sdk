@@ -973,7 +973,8 @@ type UIContribution struct {
 	Title string `protobuf:"bytes,4,opt,name=title,proto3" json:"title,omitempty"`
 	Slot  UISlot `protobuf:"varint,5,opt,name=slot,proto3,enum=dusk.v1alpha1.UISlot" json:"slot,omitempty"`
 	// Spec makes this a declared view. Set it or set element and asset, never
-	// both: two renderings of one contribution is one too many.
+	// both: two renderings of one contribution is one too many. It cannot be set
+	// in the plugin slot, which supplies no entities to draw (ADR-0064).
 	Spec          *ViewSpec `protobuf:"bytes,6,opt,name=spec,proto3" json:"spec,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
